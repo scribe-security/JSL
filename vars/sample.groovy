@@ -53,9 +53,9 @@ def HashFiles(String sample_name) {
 }
 
 def Env(String sample_name) {
-    Path scriptLocation = Paths.get(ScriptSourceUri.uri)
-    def script_path = scriptLocation.getParent().getParent().resolve('resources').toString()
-    echo "script_path: ${script_path}"
+    // Path scriptLocation = Paths.get(ScriptSourceUri.uri)
+    // def script_path = scriptLocation.getParent().getParent().resolve('resources').toString()
+    // echo "script_path: ${script_path}"
 
     sh(libraryResource('collect_scribe_info.sh'))
 
