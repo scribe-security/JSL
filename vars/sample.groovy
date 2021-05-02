@@ -70,19 +70,15 @@ def DockerInspect(String sample_name, String docker_regex) {
 }
 
 def Sample(String sample_name, String docker_regex) {
-    echo "Running sample funnction "
+    echo "Running sample funnction $sample_name $docker_regex"
     // GitHistory(sample_name)
     // HashFiles(sample_name)
     // Env(sample_name)
     // DockerInspect(sample_name, docker_regex)
 }
 
-def call(args) {
+def call(String sample_name, String docker_regex) {
     echo "Running sample call"
-    Sample("Test", "Test")
-    def sample = args
-    if (args == null || (args instanceof String && args.trim().isEmpty())) {
-        sample = Constants.DEFAULT_MAINTAINER_NAME
-    }
-    echo "Project maintained by $sample"
+    echo "Sampling $sample_name $docker_regex"
+    Sample(sample_name, docker_regex)
 }
