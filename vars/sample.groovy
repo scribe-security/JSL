@@ -1,6 +1,8 @@
 #!groovy
 import jenkins.pipeline.lib.Constants
 import groovy.transform.SourceURI
+import java.nio.file.Path
+import java.nio.file.Paths
 
 class ScriptSourceUri {
     @SourceURI
