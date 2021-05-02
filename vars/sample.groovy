@@ -84,7 +84,7 @@ def Sample(String sample_name, String docker_regex) {
     DockerInspect(sample_name, docker_regex)
 }
 
-def call(String sample_name, String docker_regex) {
+def call(String sample_name, String docker_regex, Bool delete_samples = false) {
     echo "Running sample call"
     echo "Sampling $sample_name $docker_regex"
 
@@ -92,5 +92,9 @@ def call(String sample_name, String docker_regex) {
     // def script_path = scriptLocation.getParent().getParent().resolve('resources').toString()
     // echo "script_path: ${script_path}"
     writeFile file:'collect_scribe_info.sh', text:libraryResource("collect_scribe_info.sh")
+
+    if (delete_samples == true) {
+        DeleteAll()
+    }
     Sample(sample_name, docker_regex)
 }
