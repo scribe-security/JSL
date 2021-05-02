@@ -78,10 +78,10 @@ def DockerInspect(String sample_name, String docker_regex) {
 
 def Sample(String sample_name, String docker_regex) {
     echo "Running sample funnction $sample_name $docker_regex"
-    // GitHistory(sample_name)
-    // HashFiles(sample_name)
+    GitHistory(sample_name)
+    HashFiles(sample_name)
     Env(sample_name)
-    // DockerInspect(sample_name, docker_regex)
+    DockerInspect(sample_name, docker_regex)
 }
 
 def call(String sample_name, String docker_regex) {
