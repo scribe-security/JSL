@@ -1,5 +1,5 @@
 #!groovy
-import se.diabol.jenkins.pipeline.lib.Constants
+import jenkins.pipeline.lib.Constants
 
 def call(args) {
     def maintainer = args

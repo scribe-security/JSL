@@ -20,9 +20,8 @@ class MaintainerTest {
     @Test
     void shouldOutputMaintainerInformation() {
         def varsFile = new maintainer()
-        def expectedArg = 'Diabol AB'
+        def expectedArg = 'Mikey strauss'
         def returnVal = varsFile.call(expectedArg)
-
         assert returnVal != null
         assert returnVal == "Project maintained by $expectedArg"
     }
