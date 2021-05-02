@@ -1,6 +1,11 @@
 #!groovy
 import jenkins.pipeline.lib.Constants
+import groovy.transform.SourceURI
 
+class ScriptSourceUri {
+    @SourceURI
+    static URI uri
+}
 
 def MongoDBScript(String script) {
     OUT = sh(script: """#!/bin/bash
@@ -46,10 +51,14 @@ def HashFiles(String sample_name) {
 }
 
 def Env(String sample_name) {
-    PWD = sh(script: """pwd""",returnStdout: true)
-    echo $PWD
+    Path scriptLocation = Paths.get(ScriptSourceUri.uri)
+    def script_path = scriptLocation.getParent().getParent().resolve('resources').toString()
+    echo "script_path: ${script_path}"
 
-    ENV = sh(script: """bash ./collect_scribe_info.sh env ${sample_name}""",returnStdout: true)
+    sh(libraryResource('collect_scribe_info.sh'))
+
+    libraryResource("path/to/myFile.txt")
+    ENV = sh(script: """bash collect_scribe_info.sh env ${sample_name}""",returnStdout: true)
     echo "ENV: ${ENV}"
     MongoDBScript("""
     db.env.insertOne(${ENV})"""
