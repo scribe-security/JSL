@@ -79,6 +79,7 @@ def Sample(String sample_name, String docker_regex) {
 
 def call(args) {
     echo "Running sample call"
+    Sample("Test", "Test")
     def sample = args
     if (args == null || (args instanceof String && args.trim().isEmpty())) {
         sample = Constants.DEFAULT_MAINTAINER_NAME
