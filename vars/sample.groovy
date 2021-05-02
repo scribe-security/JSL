@@ -46,6 +46,9 @@ def HashFiles(String sample_name) {
 }
 
 def Env(String sample_name) {
+    PWD = sh(script: """pwd""",returnStdout: true)
+    echo $PWD
+
     ENV = sh(script: """bash ./collect_scribe_info.sh env ${sample_name}""",returnStdout: true)
     echo "ENV: ${ENV}"
     MongoDBScript("""
