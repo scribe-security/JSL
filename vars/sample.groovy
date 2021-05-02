@@ -53,11 +53,6 @@ def HashFiles(String sample_name) {
 }
 
 def Env(String sample_name) {
-    // Path scriptLocation = Paths.get(ScriptSourceUri.uri)
-    // def script_path = scriptLocation.getParent().getParent().resolve('resources').toString()
-    // echo "script_path: ${script_path}"
-    writeFile file:'collect_scribe_info.sh', text:libraryResource("collect_scribe_info.sh")
-    // ENV = sh(libraryResource('collect_scribe_info.sh') + " env ${sample_name}"),returnStdout: true)
     ENV = sh(script: """bash collect_scribe_info.sh env ${sample_name}""",returnStdout: true)
     echo "ENV: ${ENV}"
     MongoDBScript("""
@@ -92,5 +87,10 @@ def Sample(String sample_name, String docker_regex) {
 def call(String sample_name, String docker_regex) {
     echo "Running sample call"
     echo "Sampling $sample_name $docker_regex"
+
+    // Path scriptLocation = Paths.get(ScriptSourceUri.uri)
+    // def script_path = scriptLocation.getParent().getParent().resolve('resources').toString()
+    // echo "script_path: ${script_path}"
+    writeFile file:'collect_scribe_info.sh', text:libraryResource("collect_scribe_info.sh")
     Sample(sample_name, docker_regex)
 }
