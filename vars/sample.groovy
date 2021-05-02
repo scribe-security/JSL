@@ -81,7 +81,7 @@ def call(args) {
     echo "Running sample call"
     def sample = args
     if (args == null || (args instanceof String && args.trim().isEmpty())) {
-        maintainer = Constants.DEFAULT_MAINTAINER_NAME
+        sample = Constants.DEFAULT_MAINTAINER_NAME
     }
-    echo "Project maintained by $maintainer"
+    echo "Project maintained by $sample"
 }
