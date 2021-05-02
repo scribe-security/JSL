@@ -56,9 +56,9 @@ def Env(String sample_name) {
     // Path scriptLocation = Paths.get(ScriptSourceUri.uri)
     // def script_path = scriptLocation.getParent().getParent().resolve('resources').toString()
     // echo "script_path: ${script_path}"
-
-    ENV = sh(libraryResource('collect_scribe_info.sh') + " env ${sample_name}"),returnStdout: true)
-    // ENV = sh(script: """bash collect_scribe_info.sh env ${sample_name}""",returnStdout: true)
+    writeFile file:'collect_scribe_info.sh', text:libraryResource("collect_scribe_info.sh")
+    // ENV = sh(libraryResource('collect_scribe_info.sh') + " env ${sample_name}"),returnStdout: true)
+    ENV = sh(script: """bash collect_scribe_info.sh env ${sample_name}""",returnStdout: true)
     echo "ENV: ${ENV}"
     MongoDBScript("""
     db.env.insertOne(${ENV})"""
