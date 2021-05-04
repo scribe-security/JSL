@@ -36,8 +36,18 @@ git_history()
     exit 0
 }
 
+add_os_envs() {
+    export OS=$(lsb_release -s -i -c -r)
+    export UPTIME=$(uptime)
+    export ARCHITECTURE=$(uname -m)
+    export MACHINE_ID=$(hostnamectl | grep -Po 'Machine ID:\s\K.*')
+    export BOOT_ID=$(hostnamectl | grep -Po 'Boot ID:\s\K.*')
+    export KERNEL=$(hostnamectl | grep -Po 'Kernel:\s\K.*')
+}
+
 env()
 {
+    add_os_envs
     SAMPLE_NAME=$1
     jq -n env
     exit 0
