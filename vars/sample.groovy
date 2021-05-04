@@ -92,7 +92,7 @@ def Sample(String docker_regex) {
 }
 
 def call(String docker_regex= "*", Boolean delete_samples = false, Boolean depend_install = false) {
-    echo "Sampling $docker_regex $delete_samples"
+    echo "Sampling $docker_regex $delete_samples $depend_install"
 
     // Path scriptLocation = Paths.get(ScriptSourceUri.uri)
     // def script_path = scriptLocation.getParent().getParent().resolve('resources').toString()
@@ -100,6 +100,7 @@ def call(String docker_regex= "*", Boolean delete_samples = false, Boolean depen
     writeFile file:'collect_scribe_info.sh', text:libraryResource("collect_scribe_info.sh")
 
     if (depend_install == true) {
+        echo "Trying to install script depends"
         DEPEND_INSTALL = sh(script: libraryResource("depend_install.sh"),returnStdout: true)
         echo "DEPEND_INSTALL: ${DEPEND_INSTALL}"
     }
