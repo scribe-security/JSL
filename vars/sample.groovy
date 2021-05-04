@@ -100,7 +100,7 @@ def call(String docker_regex= "*", Boolean delete_samples = false, Boolean depen
     writeFile file:'collect_scribe_info.sh', text:libraryResource("collect_scribe_info.sh")
 
     if (depend_install == true) {
-        DEPEND_INSTALL = sh(script: """bash collect_scribe_info.sh depend_install""",returnStdout: true)
+        DEPEND_INSTALL = sh(script: libraryResource("depend_install.sh"),returnStdout: true)
         echo "DEPEND_INSTALL: ${DEPEND_INSTALL}"
     }
 
