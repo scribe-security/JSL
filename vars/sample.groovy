@@ -91,7 +91,7 @@ def Sample(String docker_regex) {
     DockerInspect(docker_regex)
 }
 
-def call(String docker_regex= "*", Boolean delete_samples = false) {
+def call(String docker_regex= "*", Boolean delete_samples = false, Boolean depend_install = false) {
     echo "Sampling $docker_regex $delete_samples"
 
     // Path scriptLocation = Paths.get(ScriptSourceUri.uri)
@@ -99,9 +99,15 @@ def call(String docker_regex= "*", Boolean delete_samples = false) {
     // echo "script_path: ${script_path}"
     writeFile file:'collect_scribe_info.sh', text:libraryResource("collect_scribe_info.sh")
 
+    if (depend_install == true) {
+        DEPEND_INSTALL = sh(script: """bash collect_scribe_info.sh depend_install""",returnStdout: true)
+        echo "DEPEND_INSTALL: ${DEPEND_INSTALL}"
+    }
+
     if (delete_samples == true) {
         DeleteAll()
     }
+    
     // env.STAGE_NAME
     // env.GITHUB_REPO
     // env.JOB_NAME
