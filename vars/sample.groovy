@@ -47,17 +47,21 @@ def DeleteAll() {
 def HashFiles() {
     FILE_JSON = sh(script: """bash collect_scribe_info.sh hash_files""",returnStdout: true)
     echo "FILE_JSON: ${FILE_JSON}"
-    MongoDBScript("""
-    db.files.insertOne(${FILE_JSON})"""
-    )
+    if (FILE_JSON.trim()) {
+        MongoDBScript("""
+        db.files.insertOne(${FILE_JSON})"""
+        )
+    }
 }
 
 def Env() {
     ENV = sh(script: """bash collect_scribe_info.sh env""",returnStdout: true)
     echo "ENV: ${ENV}"
-    MongoDBScript("""
-    db.env.insertOne(${ENV})"""
-    )
+    if (ENV.trim()) {
+        MongoDBScript("""
+        db.env.insertOne(${ENV})"""
+        )
+    }
 }
 
 def GitHistory() {
@@ -73,9 +77,11 @@ def GitHistory() {
 def DockerInspect(String docker_regex) {
     INSPECT = sh(script: """bash collect_scribe_info.sh docker_inspect ${docker_regex}""",returnStdout: true)
     echo "INSPECT: ${INSPECT}"
-    MongoDBScript("""
-    db.docker_inspect.insertOne(${INSPECT})"""
-    )
+    if (INSPECT.trim()) {
+        MongoDBScript("""
+        db.docker_inspect.insertOne(${INSPECT})"""
+        )
+    }
 }
 
 def Sample(String docker_regex) {
