@@ -35,12 +35,12 @@ def InitMongoDb() {
 }
 
 def DeleteAll() {
-    MongoDBScript('''
-    db.env.remove({})
-    db.files.remove({})
-    db.git_history.remove({})
-    db.docker_inspect.remove({})
-    '''
+    MongoDBScript("""
+    db.env.remove({ JOB_NAME: "${JOB_NAME}" })
+    db.files.remove({ JOB_NAME: "${JOB_NAME}" })
+    db.git_history.remove({ JOB_NAME: "${JOB_NAME}" })
+    db.docker_inspect.remove({ JOB_NAME: "${JOB_NAME}" })
+    """
     )
 }
 
