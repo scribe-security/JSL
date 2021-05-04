@@ -3,7 +3,7 @@
 # NOTE: INPUT is places in jenkins shell step -  Token Recognition and parameter expantion will run from input if found.
 # I have tried to prevent this (see weird sed in docker_inspect) but have not found a solution - because this is just a base script for our own learning process
 # i have let it go 
-
+set -x
 docker_inspect()
 {
     SAMPLE_NAME=$1
@@ -40,9 +40,12 @@ add_os_envs() {
     export OS=$(lsb_release -s -i -c -r)
     export UPTIME=$(uptime)
     export ARCHITECTURE=$(uname -m)
-    export MACHINE_ID=$(hostnamectl | grep -Po 'Machine ID:\s\K.*')
-    export BOOT_ID=$(hostnamectl | grep -Po 'Boot ID:\s\K.*')
-    export KERNEL=$(hostnamectl | grep -Po 'Kernel:\s\K.*')
+    export KERNEL=$(uname -s -r)
+    export VENDOR=$(cat /sys/class/dmi/id/chassis_vendor)
+    export PRODUCT_NAME=$(cat /sys/class/dmi/id/product_name)
+    export SERIAL_NUM=$(cat /sys/class/dmi/id/product_serial)
+    export PROCESSOR_NAME=$(awk -F':' '/^model name/ {print $2}' /proc/cpuinfo | uniq | sed -e 's/^[ \t]*//')
+    export HOST_IP=$(hostname -i)
 }
 
 env()
