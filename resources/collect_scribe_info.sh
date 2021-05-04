@@ -11,7 +11,6 @@ tempfile() {
 
 docker_inspect()
 {
-    SAMPLE_NAME=$1
     REGEX=$2
     docker image inspect  $(docker image ls |  awk "{print \$1}" | egrep $REGEX)|  sed -e 's/\$(/\\\\%(/g' | jq -n '.IMAGES = inputs' | \
         jq '.JOB_NAME += "'${JOB_NAME}'"' | \
@@ -24,7 +23,6 @@ docker_inspect()
 
 git_history()
 {
-    SAMPLE_NAME=$1
     WORKDIR=$(pwd)
     HISTORY_TMP=$(tempfile)
     trap 'rm -f $HISTORY_TMP' EXIT
@@ -88,7 +86,11 @@ hash_files()
 opt=$1
 REGEX=$2
 
-SAMPLE_NAME="Testing"
+JOB_NAME=$(printf %q "$JOB_NAME")
+BUILD_TAG=$(printf %q "$BUILD_TAG")
+GITHUB_REPO=$(printf %q "$GITHUB_REPO")
+STAGE_NAME=$(printf %q "$STAGE_NAME")
+
 case $opt
 in
     env) env $SAMPLE_NAME;;
