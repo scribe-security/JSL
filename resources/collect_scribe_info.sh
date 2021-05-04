@@ -86,10 +86,10 @@ hash_files()
 opt=$1
 REGEX=$2
 
-JOB_NAME=$(printf %q "$JOB_NAME")
-BUILD_TAG=$(printf %q "$BUILD_TAG")
-GITHUB_REPO=$(printf %q "$GITHUB_REPO")
-STAGE_NAME=$(printf %q "$STAGE_NAME")
+JOB_NAME=$(sed 's/ /_/g' <<< "$JOB_NAME")
+BUILD_TAG=$(sed 's/ /_/g' <<< "$BUILD_TAG")
+GITHUB_REPO=$(sed 's/ /_/g' <<< "$GITHUB_REPO")
+STAGE_NAME=$(sed 's/ /_/g' <<< "$STAGE_NAME")
 
 case $opt
 in
