@@ -30,7 +30,10 @@ git_history()
 env()
 {
     SAMPLE_NAME=$1
-    jq -n env  | jq '.SAMPLE += "'${SAMPLE_NAME}'"'
+    jq -n env  | jq '.JOB_NAME += "'${JOB_NAME}'"' | \
+    jq '.BUILD_TAG += "'${BUILD_TAG}'"' | \
+    jq '.GITHUB_REPO += "'${GITHUB_REPO}'"' | \ 
+    jq '.STAGE_NAME += "'${STAGE_NAME}'"'
     exit 0
 }
 
@@ -47,7 +50,6 @@ hash_files()
 
 opt=$1
 REGEX=$2
-echo $STAGE_NAME $GITHUB_REPO $JOB_NAME $BUILD_TAG
 
 SAMPLE_NAME="Testing"
 case $opt
