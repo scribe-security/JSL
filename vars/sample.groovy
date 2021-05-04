@@ -63,9 +63,11 @@ def Env() {
 def GitHistory() {
     HISTORY = sh(script: """bash collect_scribe_info.sh git_history""",returnStdout: true)
     echo "HISTORY: ${HISTORY}"
-    MongoDBScript("""
-    db.git_history.insertOne(${HISTORY})"""
-    )
+    if(HISTORY.notBlank) {
+        MongoDBScript("""
+        db.git_history.insertOne(${HISTORY})"""
+        )
+    }
 }
 
 def DockerInspect(String docker_regex) {
