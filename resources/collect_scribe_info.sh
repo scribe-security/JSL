@@ -8,7 +8,12 @@ docker_inspect()
 {
     SAMPLE_NAME=$1
     REGEX=$2
-    docker image inspect  $(docker image ls |  awk "{print \$1}" | egrep $REGEX)|  sed -e 's/\$(/\\\\%(/g' | jq -n '.IMAGES = inputs' | jq '.SAMPLE += "'${SAMPLE_NAME}'"'
+    docker image inspect  $(docker image ls |  awk "{print \$1}" | egrep $REGEX)|  sed -e 's/\$(/\\\\%(/g' | jq -n '.IMAGES = inputs' | \
+        jq '.JOB_NAME += "'${JOB_NAME}'"' | \
+        jq '.BUILD_TAG += "'${BUILD_TAG}'"' | \
+        jq '.GITHUB_REPO += "'${GITHUB_REPO}'"' | \
+        jq '.STAGE_NAME += "'${STAGE_NAME}'"'
+
     exit 0
 }
 
@@ -22,7 +27,11 @@ git_history()
         sed "$ s/,$//" | \
         sed ':a;N;$!ba;s/\r\n\([^{]\)/\\n\1/g' | \
         awk 'BEGIN { print("[") } { print($0) } END { print("]") }')
-        jq -n --arg REPODIR "$WORKDIR" --argjson HISTORY "$HISTORY" '{REPODIR: $REPODIR, HISTORY: $HISTORY}' | jq '.SAMPLE += "'${SAMPLE_NAME}'"'
+        jq -n --arg REPODIR "$WORKDIR" --argjson HISTORY "$HISTORY" '{REPODIR: $REPODIR, HISTORY: $HISTORY}' | \
+        jq '.JOB_NAME += "'${JOB_NAME}'"' | \
+        jq '.BUILD_TAG += "'${BUILD_TAG}'"' | \
+        jq '.GITHUB_REPO += "'${GITHUB_REPO}'"' | \
+        jq '.STAGE_NAME += "'${STAGE_NAME}'"'
     fi
     exit 0
 }
@@ -30,10 +39,7 @@ git_history()
 env()
 {
     SAMPLE_NAME=$1
-    jq -n env  | jq '.JOB_NAME += "'${JOB_NAME}'"' | \
-    jq '.BUILD_TAG += "'${BUILD_TAG}'"' | \
-    jq '.GITHUB_REPO += "'${GITHUB_REPO}'"' | \
-    jq '.STAGE_NAME += "'${STAGE_NAME}'"'
+    jq -n env
     exit 0
 }
 
@@ -44,7 +50,11 @@ hash_files()
     find . -type f -name "*" | 
     while read line; do 
         jq -n --arg name "$(basename "$line")" --arg HASH "$(sha256sum $line | awk '{ print $1 }')" --arg path "$line" '{name: $name, path: $path, hash: $HASH}'
-    done | jq -n '.files |= [inputs]' | jq '.WORKDIR += "'${WORKDIR}'"' | jq '.SAMPLE += "'${SAMPLE_NAME}'"'
+    done | jq -n '.files |= [inputs]' | jq '.WORKDIR += "'${WORKDIR}'"' | \
+        jq '.JOB_NAME += "'${JOB_NAME}'"' | \
+        jq '.BUILD_TAG += "'${BUILD_TAG}'"' | \
+        jq '.GITHUB_REPO += "'${GITHUB_REPO}'"' | \
+        jq '.STAGE_NAME += "'${STAGE_NAME}'"'
     exit 0
 }
 
