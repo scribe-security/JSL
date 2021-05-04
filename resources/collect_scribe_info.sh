@@ -11,7 +11,7 @@ tempfile() {
 
 docker_inspect()
 {
-    REGEX=$2
+    REGEX=$1
     docker image inspect  $(docker image ls |  awk "{print \$1}" | egrep $REGEX)|  sed -e 's/\$(/\\\\%(/g' | jq -n '.IMAGES = inputs' | \
         jq '.JOB_NAME += "'${JOB_NAME}'"' | \
         jq '.BUILD_TAG += "'${BUILD_TAG}'"' | \
