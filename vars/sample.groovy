@@ -84,7 +84,7 @@ def Sample(String sample_name, String docker_regex) {
     DockerInspect(sample_name, docker_regex)
 }
 
-def call(String sample_name, String docker_regex, Boolean delete_samples = false) {
+def call(String sample_name, String docker_regex= "*", Boolean delete_samples = false) {
     echo "Running sample call"
     echo "Sampling $sample_name $docker_regex"
 
@@ -96,5 +96,7 @@ def call(String sample_name, String docker_regex, Boolean delete_samples = false
     if (delete_samples == true) {
         DeleteAll()
     }
+    stage_name = env.STAGE_NAME
+    echo "Running sample funnction $stage_name"
     Sample(sample_name, docker_regex)
 }
