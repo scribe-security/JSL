@@ -46,8 +46,10 @@ hash_files()
 }
 
 opt=$1
-SAMPLE_NAME=$2
-REGEX=$3
+REGEX=$2
+echo $STAGE_NAME $GITHUB_REPO $JOB_NAME $BUILD_TAG
+
+SAMPLE_NAME="Testing"
 case $opt
 in
     env) env $SAMPLE_NAME;;

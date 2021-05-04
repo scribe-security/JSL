@@ -44,49 +44,47 @@ def DeleteAll() {
     )
 }
 
-def HashFiles(String sample_name) {
-    FILE_JSON = sh(script: """bash collect_scribe_info.sh hash_files ${sample_name}""",returnStdout: true)
+def HashFiles() {
+    FILE_JSON = sh(script: """bash collect_scribe_info.sh hash_files""",returnStdout: true)
     echo "FILE_JSON: ${FILE_JSON}"
     MongoDBScript("""
     db.files.insertOne(${FILE_JSON})"""
     )
 }
 
-def Env(String sample_name) {
-    ENV = sh(script: """bash collect_scribe_info.sh env ${sample_name}""",returnStdout: true)
+def Env() {
+    ENV = sh(script: """bash collect_scribe_info.sh env""",returnStdout: true)
     echo "ENV: ${ENV}"
     MongoDBScript("""
     db.env.insertOne(${ENV})"""
     )
 }
 
-def GitHistory(String sample_name) {
-    HISTORY = sh(script: """bash collect_scribe_info.sh git_history ${sample_name}""",returnStdout: true)
+def GitHistory() {
+    HISTORY = sh(script: """bash collect_scribe_info.sh git_history""",returnStdout: true)
     echo "HISTORY: ${HISTORY}"
     MongoDBScript("""
     db.git_history.insertOne(${HISTORY})"""
     )
 }
 
-def DockerInspect(String sample_name, String docker_regex) {
-    INSPECT = sh(script: """bash collect_scribe_info.sh docker_inspect ${sample_name} ${docker_regex}""",returnStdout: true)
+def DockerInspect(String docker_regex) {
+    INSPECT = sh(script: """bash collect_scribe_info.sh docker_inspect ${docker_regex}""",returnStdout: true)
     echo "INSPECT: ${INSPECT}"
     MongoDBScript("""
     db.docker_inspect.insertOne(${INSPECT})"""
     )
 }
 
-def Sample(String sample_name, String docker_regex) {
-    echo "Running sample funnction $sample_name $docker_regex"
-    GitHistory(sample_name)
-    HashFiles(sample_name)
-    Env(sample_name)
-    DockerInspect(sample_name, docker_regex)
+def Sample(String docker_regex) {
+    GitHistory()
+    HashFiles()
+    Env()
+    DockerInspect(docker_regex)
 }
 
-def call(String sample_name, String docker_regex= "*", Boolean delete_samples = false) {
-    echo "Running sample call"
-    echo "Sampling $sample_name $docker_regex"
+def call(String docker_regex= "*", Boolean delete_samples = false) {
+    echo "Sampling $docker_regex"
 
     // Path scriptLocation = Paths.get(ScriptSourceUri.uri)
     // def script_path = scriptLocation.getParent().getParent().resolve('resources').toString()
@@ -96,7 +94,11 @@ def call(String sample_name, String docker_regex= "*", Boolean delete_samples = 
     if (delete_samples == true) {
         DeleteAll()
     }
-    stage_name = env.STAGE_NAME
+    // env.STAGE_NAME
+    // env.GITHUB_REPO
+    // env.JOB_NAME
+    // env.BUILD_TAG  
+
     echo "Running sample funnction $stage_name"
-    Sample(sample_name, docker_regex)
+    Sample(docker_regex)
 }
