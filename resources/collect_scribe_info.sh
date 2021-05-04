@@ -32,7 +32,7 @@ env()
     SAMPLE_NAME=$1
     jq -n env  | jq '.JOB_NAME += "'${JOB_NAME}'"' | \
     jq '.BUILD_TAG += "'${BUILD_TAG}'"' | \
-    jq '.GITHUB_REPO += "'${GITHUB_REPO}'"' | \ 
+    jq '.GITHUB_REPO += "'${GITHUB_REPO}'"' | \
     jq '.STAGE_NAME += "'${STAGE_NAME}'"'
     exit 0
 }
