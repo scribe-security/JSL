@@ -15,7 +15,7 @@ docker_inspect()
     docker image inspect  $(docker image ls |  awk "{print \$1}" | egrep $REGEX)|  sed -e 's/\$(/\\\\%(/g' | jq -n '.IMAGES = inputs' | \
         jq '.JOB_NAME += "'${JOB_NAME}'"' | \
         jq '.BUILD_TAG += "'${BUILD_TAG}'"' | \
-        jq '.GITHUB_REPO += "'${GITHUB_REPO}'"' | \
+        jq '.GIT_URL += "'${GIT_URL}'"' | \
         jq '.STAGE_NAME += "'${STAGE_NAME}'"'
 
     exit 0
@@ -42,7 +42,7 @@ git_history()
         jq -n --arg REPODIR "$WORKDIR" --slurpfile HISTORY $HISTORY_TMP '{REPODIR: $REPODIR, HISTORY: $HISTORY}' | \
         jq '.JOB_NAME += "'${JOB_NAME}'"' | \
         jq '.BUILD_TAG += "'${BUILD_TAG}'"' | \
-        jq '.GITHUB_REPO += "'${GITHUB_REPO}'"' | \
+        jq '.GIT_URL += "'${GIT_URL}'"' | \
         jq '.STAGE_NAME += "'${STAGE_NAME}'"'
     fi
     exit 0
@@ -78,7 +78,7 @@ hash_files()
     done | jq -n '.files |= [inputs]' | jq '.WORKDIR += "'${WORKDIR}'"' | \
         jq '.JOB_NAME += "'${JOB_NAME}'"' | \
         jq '.BUILD_TAG += "'${BUILD_TAG}'"' | \
-        jq '.GITHUB_REPO += "'${GITHUB_REPO}'"' | \
+        jq '.GIT_URL += "'${GIT_URL}'"' | \
         jq '.STAGE_NAME += "'${STAGE_NAME}'"'
     exit 0
 }
@@ -88,7 +88,7 @@ REGEX=$2
 
 JOB_NAME=$(sed 's/ /_/g' <<< "$JOB_NAME")
 BUILD_TAG=$(sed 's/ /_/g' <<< "$BUILD_TAG")
-GITHUB_REPO=$(sed 's/ /_/g' <<< "$GITHUB_REPO")
+GIT_URL=$(sed 's/ /_/g' <<< "$GIT_URL")
 STAGE_NAME=$(sed 's/ /_/g' <<< "$STAGE_NAME")
 
 case $opt
