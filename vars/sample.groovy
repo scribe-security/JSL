@@ -84,7 +84,7 @@ def Sample(String docker_regex) {
 }
 
 def call(String docker_regex= "*", Boolean delete_samples = false) {
-    echo "Sampling $docker_regex"
+    echo "Sampling $docker_regex $delete_samples"
 
     // Path scriptLocation = Paths.get(ScriptSourceUri.uri)
     // def script_path = scriptLocation.getParent().getParent().resolve('resources').toString()
