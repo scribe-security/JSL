@@ -3,7 +3,7 @@
 # NOTE: INPUT is places in jenkins shell step -  Token Recognition and parameter expantion will run from input if found.
 # I have tried to prevent this (see weird sed in docker_inspect) but have not found a solution - because this is just a base script for our own learning process
 # i have let it go 
-set -x
+# set -x
 tempfile() {
     tempprefix=$(basename "$0")
     mktemp /tmp/${tempprefix}.XXXXXX
