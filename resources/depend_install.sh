@@ -1,5 +1,5 @@
 #!/bin/sh
-
+set -x
 
 if [ ! $(which  jq) ] || [ ! $(which  bash) ]  || [ ! $(which  git) ]; then
 
@@ -19,10 +19,10 @@ fi
 if which apt-get; then 
     who
     if which sudo; then 
-        echo "SUDO APT found installing depend"
+        echo "SUDO APT-GET found installing depend"
         sudo apt-get install -y bash jq git
     else
-        echo "APT found installing depend"
+        echo "APT-GET found installing depend"
         apt-get install -y bash jq git
     fi
     exit 0
