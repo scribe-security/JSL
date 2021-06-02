@@ -67,7 +67,7 @@ add_os_envs() {
 env()
 {
     add_os_envs
-    export SAMPLE_NAME=$1
+    source SAMPLE_NAME=$1
     jq -n env
     exit 0
 }
