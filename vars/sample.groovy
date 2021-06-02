@@ -47,48 +47,28 @@ def DeleteAll() {
 def HashFiles() {
     FILE_JSON = sh(script: """bash collect_scribe_info.sh hash_files""",returnStdout: true)
     echo "FILE_JSON: ${FILE_JSON}"
-    if (FILE_JSON.trim()) {
-        MongoDBScript("""
-        db.files.insertOne(${FILE_JSON})"""
-        )
-    }
 }
 
 def Env() {
     ENV = sh(script: """bash collect_scribe_info.sh env""",returnStdout: true)
     echo "ENV: ${ENV}"
-    if (ENV.trim()) {
-        MongoDBScript("""
-        db.env.insertOne(${ENV})"""
-        )
-    }
 }
 
 def GitHistory() {
     HISTORY = sh(script: """bash collect_scribe_info.sh git_history""",returnStdout: true)
     echo "HISTORY: ${HISTORY}"
-    if (HISTORY.trim()) {
-        MongoDBScript("""
-        db.git_history.insertOne(${HISTORY})"""
-        )
-    }
 }
 
 def DockerInspect(String docker_regex) {
     INSPECT = sh(script: """bash collect_scribe_info.sh docker_inspect ${docker_regex}""",returnStdout: true)
     echo "INSPECT: ${INSPECT}"
-    if (INSPECT.trim()) {
-        MongoDBScript("""
-        db.docker_inspect.insertOne(${INSPECT})"""
-        )
-    }
 }
 
 def Sample(String docker_regex) {
     GitHistory()
     HashFiles()
     Env()
-    DockerInspect(docker_regex)
+    // DockerInspect(docker_regex)
 }
 
 def call(String docker_regex= "*", Boolean delete_samples = false, Boolean depend_install = false) {
@@ -103,10 +83,6 @@ def call(String docker_regex= "*", Boolean delete_samples = false, Boolean depen
         echo "Trying to install script depends"
         DEPEND_INSTALL = sh(script: libraryResource("depend_install.sh"),returnStdout: true)
         echo "DEPEND_INSTALL: ${DEPEND_INSTALL}"
-    }
-
-    if (delete_samples == true) {
-        DeleteAll()
     }
     
     // env.STAGE_NAME
