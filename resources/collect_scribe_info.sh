@@ -13,6 +13,7 @@ docker_inspect()
 {
     REGEX=$1
     docker image inspect  $(docker image ls |  awk "{print \$1}" | egrep $REGEX)|  sed -e 's/\$(/\\\\%(/g' | jq -n '.IMAGES = inputs' | \
+        jq '.SAMPLE_NAME += "'${NAME}'"' | \
         jq '.JOB_NAME += "'${JOB_NAME}'"' | \
         jq '.BUILD_TAG += "'${BUILD_TAG}'"' | \
         jq '.GIT_URL += "'${GIT_URL}'"' | \
@@ -40,6 +41,7 @@ git_history()
             awk 'BEGIN { print("[") } { print($0) } END { print("]") }' > $HISTORY_TMP
 
         jq -n --arg REPODIR "$WORKDIR" --slurpfile HISTORY $HISTORY_TMP '{REPODIR: $REPODIR, HISTORY: $HISTORY}' | \
+        jq '.SAMPLE_NAME += "'${NAME}'"' | \
         jq '.JOB_NAME += "'${JOB_NAME}'"' | \
         jq '.BUILD_TAG += "'${BUILD_TAG}'"' | \
         jq '.GIT_URL += "'${GIT_URL}'"' | \
@@ -68,6 +70,7 @@ env()
     exit 0
 }
 
+
 hash_files()
 {
     SAMPLE_NAME=$1
@@ -76,6 +79,7 @@ hash_files()
     while read line; do 
         jq -n --arg name "$(basename "$line")" --arg HASH "$(sha256sum $line | awk '{ print $1 }')" --arg path "$line" '{name: $name, path: $path, hash: $HASH}'
     done | jq -n '.files |= [inputs]' | jq '.WORKDIR += "'${WORKDIR}'"' | \
+        jq '.SAMPLE_NAME += "'${NAME}'"' | \
         jq '.JOB_NAME += "'${JOB_NAME}'"' | \
         jq '.BUILD_TAG += "'${BUILD_TAG}'"' | \
         jq '.GIT_URL += "'${GIT_URL}'"' | \
@@ -84,19 +88,29 @@ hash_files()
 }
 
 opt=$1
-REGEX=$2
+NAME=$2
+REGEX=$3
+
+
 
 JOB_NAME=$(sed 's/ /_/g' <<< "$JOB_NAME")
 BUILD_TAG=$(sed 's/ /_/g' <<< "$BUILD_TAG")
 GIT_URL=$(sed 's/ /_/g' <<< "$GIT_URL")
 STAGE_NAME=$(sed 's/ /_/g' <<< "$STAGE_NAME")
 
-case $opt
-in
-    env) env $SAMPLE_NAME;;
-    hash_files) hash_files $SAMPLE_NAME;;
-    git_history) git_history $SAMPLE_NAME;;
-    docker_inspect) docker_inspect $SAMPLE_NAME $REGEX;;
-    *) echo "Nothing to do"
-       exit 1;;
-esac
+sample_by_type()
+{
+    set -x
+    case $opt
+    in
+        env) env $SAMPLE_NAME;;
+        hash_files) hash_files $SAMPLE_NAME;;
+        git_history) git_history $SAMPLE_NAME;;
+        docker_inspect) docker_inspect $SAMPLE_NAME $REGEX;;
+        *) echo "Nothing to do"
+        exit 1;;
+    esac
+} 
+
+mkdir -p samples/$STAGE_NAME/$NAME 2> /dev/null
+sample_by_type > "samples/$STAGE_NAME/$NAME/$opt.json"

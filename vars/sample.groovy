@@ -44,35 +44,35 @@ def DeleteAll() {
     )
 }
 
-def HashFiles() {
-    FILE_JSON = sh(script: """bash collect_scribe_info.sh hash_files""",returnStdout: true)
+def HashFiles(String name) {
+    FILE_JSON = sh(script: """bash collect_scribe_info.sh hash_files ${name}""",returnStdout: true)
     echo "FILE_JSON: ${FILE_JSON}"
 }
 
-def Env() {
-    ENV = sh(script: """bash collect_scribe_info.sh env""",returnStdout: true)
+def Env(String name) {
+    ENV = sh(script: """bash collect_scribe_info.sh env ${name}""",returnStdout: true)
     echo "ENV: ${ENV}"
 }
 
-def GitHistory() {
-    HISTORY = sh(script: """bash collect_scribe_info.sh git_history""",returnStdout: true)
+def GitHistory(String name) {
+    HISTORY = sh(script: """bash collect_scribe_info.sh git_history ${name}""",returnStdout: true)
     echo "HISTORY: ${HISTORY}"
 }
 
-def DockerInspect(String docker_regex) {
-    INSPECT = sh(script: """bash collect_scribe_info.sh docker_inspect ${docker_regex}""",returnStdout: true)
+def DockerInspect(String name, String docker_regex) {
+    INSPECT = sh(script: """bash collect_scribe_info.sh docker_inspect ${name}""",returnStdout: true)
     echo "INSPECT: ${INSPECT}"
 }
 
-def Sample(String docker_regex) {
-    GitHistory()
-    HashFiles()
-    Env()
+def Sample(String name, String docker_regex) {
+    GitHistory(name)
+    HashFiles(name)
+    Env(name)
     // DockerInspect(docker_regex)
 }
 
-def call(String docker_regex= "*", Boolean delete_samples = false, Boolean depend_install = true) {
-    echo "Sampling $docker_regex $delete_samples $depend_install"
+def call(String name, String docker_regex= "*", Boolean delete_samples = false, Boolean depend_install = true) {
+    echo "Sampling  $name $docker_regex $delete_samples $depend_install"
 
     // Path scriptLocation = Paths.get(ScriptSourceUri.uri)
     // def script_path = scriptLocation.getParent().getParent().resolve('resources').toString()
@@ -91,5 +91,5 @@ def call(String docker_regex= "*", Boolean delete_samples = false, Boolean depen
     // env.BUILD_TAG  
 
     echo "Running sample funnction $stage_name"
-    Sample(docker_regex)
+    Sample(name, docker_regex)
 }
