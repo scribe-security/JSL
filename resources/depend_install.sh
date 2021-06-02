@@ -14,9 +14,16 @@ if which apk; then
     # echo "127.0.0.1 mongodb" >> /etc/hosts
 fi
 
+
+
 if which apt; then 
-    echo "APT found installing depend"
-    apt install -y bash jq git
+    if which sudo; then 
+        echo "SUDO APT found installing depend"
+        sudo apt install -y bash jq git
+    else
+        echo "APT found installing depend"
+        apt install -y bash jq git
+    fi
 fi
 
 fi
