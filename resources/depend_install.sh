@@ -16,11 +16,18 @@ if which apk; then
 fi
 
 
+
 if which apt-get; then 
     who
+
+    if which curl; then
+        JQ=/usr/bin/jq
+        curl https://stedolan.github.io/jq/download/linux64/jq > $JQ && chmod +x $JQ
+    fi
+
     if which sudo; then 
         echo "SUDO APT-GET found installing depend"
-        sudo apt-get install -y bash jq git
+        sudo apt-get install -y bash git
     else
         echo "APT-GET found installing depend"
         apt-get install -y bash jq git
