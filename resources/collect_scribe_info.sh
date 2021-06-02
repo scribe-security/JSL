@@ -11,9 +11,10 @@ tempfile() {
 
 docker_inspect()
 {
+    SAMPLE_NAME=$1
     REGEX=$1
     docker image inspect  $(docker image ls |  awk "{print \$1}" | egrep $REGEX)|  sed -e 's/\$(/\\\\%(/g' | jq -n '.IMAGES = inputs' | \
-        jq '.SAMPLE_NAME += "'${NAME}'"' | \
+        jq '.SAMPLE_NAME += "'${SAMPLE_NAME}'"' | \
         jq '.JOB_NAME += "'${JOB_NAME}'"' | \
         jq '.BUILD_TAG += "'${BUILD_TAG}'"' | \
         jq '.GIT_URL += "'${GIT_URL}'"' | \
@@ -24,6 +25,7 @@ docker_inspect()
 
 git_history()
 {
+    SAMPLE_NAME=$1
     WORKDIR=$(pwd)
     HISTORY_TMP=$(tempfile)
     trap 'rm -f $HISTORY_TMP' EXIT
@@ -41,7 +43,7 @@ git_history()
             awk 'BEGIN { print("[") } { print($0) } END { print("]") }' > $HISTORY_TMP
 
         jq -n --arg REPODIR "$WORKDIR" --slurpfile HISTORY $HISTORY_TMP '{REPODIR: $REPODIR, HISTORY: $HISTORY}' | \
-        jq '.SAMPLE_NAME += "'${NAME}'"' | \
+        jq '.SAMPLE_NAME += "'${SAMPLE_NAME}'"' | \
         jq '.JOB_NAME += "'${JOB_NAME}'"' | \
         jq '.BUILD_TAG += "'${BUILD_TAG}'"' | \
         jq '.GIT_URL += "'${GIT_URL}'"' | \
@@ -65,7 +67,7 @@ add_os_envs() {
 env()
 {
     add_os_envs
-    SAMPLE_NAME=$1
+    export SAMPLE_NAME=$1
     jq -n env
     exit 0
 }
@@ -79,7 +81,7 @@ hash_files()
     while read line; do 
         jq -n --arg name "$(basename "$line")" --arg HASH "$(sha256sum $line | awk '{ print $1 }')" --arg path "$line" '{name: $name, path: $path, hash: $HASH}'
     done | jq -n '.files |= [inputs]' | jq '.WORKDIR += "'${WORKDIR}'"' | \
-        jq '.SAMPLE_NAME += "'${NAME}'"' | \
+        jq '.SAMPLE_NAME += "'${SAMPLE_NAME}'"' | \
         jq '.JOB_NAME += "'${JOB_NAME}'"' | \
         jq '.BUILD_TAG += "'${BUILD_TAG}'"' | \
         jq '.GIT_URL += "'${GIT_URL}'"' | \
