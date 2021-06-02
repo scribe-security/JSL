@@ -91,14 +91,11 @@ opt=$1
 SAMPLE_NAME=$2
 REGEX=$3
 
-
-
-
-
 sample_by_type()
 {
     set -x
-    SAMPLE_NAME=$1
+    opt=$1
+    SAMPLE_NAME=$2
     JOB_NAME=$(sed 's/ /_/g' <<< "$JOB_NAME")
     BUILD_TAG=$(sed 's/ /_/g' <<< "$BUILD_TAG")
     GIT_URL=$(sed 's/ /_/g' <<< "$GIT_URL")
@@ -116,4 +113,4 @@ sample_by_type()
 } 
 
 mkdir -p samples/$STAGE_NAME/$SAMPLE_NAME 2> /dev/null
-sample_by_type $SAMPLE_NAME > "samples/$STAGE_NAME/$SAMPLE_NAME/$opt.json"
+sample_by_type $opt $SAMPLE_NAME > "samples/$STAGE_NAME/$SAMPLE_NAME/$opt.json"
