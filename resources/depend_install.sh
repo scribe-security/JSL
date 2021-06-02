@@ -19,33 +19,16 @@ fi
 
 if which apt-get; then 
     who
-
-    if which curl; then
-        JQ=/usr/bin/jq
-        curl https://stedolan.github.io/jq/download/linux64/jq > $JQ && chmod +x $JQ
-    fi
-
-    if which sudo; then 
-        echo "SUDO APT-GET found installing depend"
-        sudo apt-get install -y bash git
-    else
-        echo "APT-GET found installing depend"
-        apt-get install -y bash jq git
-    fi
+    echo "APT-GET found installing depend"
+    apt-get update
+    apt-get install -y bash jq git
     exit 0
 fi
 
 
 if which apt; then 
-    who
-    if which sudo; then 
-        echo "SUDO APT found installing depend"
-        sudo apt install -y bash jq git
-    else
-        echo "APT found installing depend"
-        apt install -y bash jq git
-    fi
+    echo "APT found installing depend"
+    apt update
+    apt install -y bash git js
     exit 0
-fi
-
 fi
