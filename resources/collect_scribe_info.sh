@@ -88,19 +88,22 @@ hash_files()
 }
 
 opt=$1
-NAME=$2
+SAMPLE_NAME=$2
 REGEX=$3
 
 
 
-JOB_NAME=$(sed 's/ /_/g' <<< "$JOB_NAME")
-BUILD_TAG=$(sed 's/ /_/g' <<< "$BUILD_TAG")
-GIT_URL=$(sed 's/ /_/g' <<< "$GIT_URL")
-STAGE_NAME=$(sed 's/ /_/g' <<< "$STAGE_NAME")
+
 
 sample_by_type()
 {
     set -x
+    SAMPLE_NAME=$1
+    JOB_NAME=$(sed 's/ /_/g' <<< "$JOB_NAME")
+    BUILD_TAG=$(sed 's/ /_/g' <<< "$BUILD_TAG")
+    GIT_URL=$(sed 's/ /_/g' <<< "$GIT_URL")
+    STAGE_NAME=$(sed 's/ /_/g' <<< "$STAGE_NAME")
+
     case $opt
     in
         env) env $SAMPLE_NAME;;
@@ -112,5 +115,5 @@ sample_by_type()
     esac
 } 
 
-mkdir -p samples/$STAGE_NAME/$NAME 2> /dev/null
-sample_by_type > "samples/$STAGE_NAME/$NAME/$opt.json"
+mkdir -p samples/$STAGE_NAME/$SAMPLE_NAME 2> /dev/null
+sample_by_type $SAMPLE_NAME > "samples/$STAGE_NAME/$SAMPLE_NAME/$opt.json"
