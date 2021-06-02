@@ -16,7 +16,7 @@ fi
 
 if which apt; then 
     echo "APT found installing depend"
-    # apt install -y bash jq git
+    apt install -y bash jq git
 fi
 
 fi
