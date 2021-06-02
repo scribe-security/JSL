@@ -17,6 +17,7 @@ fi
 
 
 if which apt; then 
+    who
     if which sudo; then 
         echo "SUDO APT found installing depend"
         sudo apt install -y bash jq git
