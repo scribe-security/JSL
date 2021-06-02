@@ -9,6 +9,35 @@ class ScriptSourceUri {
     static URI uri
 }
 
+def ListJson(String name) {
+    def json_files
+    dir ("""samples/${env.STAGE_NAME}/${name}""") {
+      json_files = findFiles(glob: """*.json""")
+    }
+    return json_files
+}
+
+
+def PublishSample(String name) {
+    def file_list = []
+    for (f in  ListJson(name)) {
+      if (! f.directory) {
+        echo """Publishing ${f.name} ${f.path} ${f.directory} ${f.length} ${f.lastModified}"""
+        file_list.add(f.path)
+      }
+    }
+    def obj_list_files
+    obj_list_files = ListJson(name)
+    echo """File list ${file_list} ${obj_list_files}"""
+
+    publishHTML (target : [allowMissing: false,
+        alwaysLinkToLastBuild: true,
+        keepAll: true,
+        reportDir: """samples/${env.STAGE_NAME}/${name}""",
+        reportFiles: obj_list_files.join(','),
+        reportName: name])
+}
+
 def MongoDBScript(String script) {
     OUT = sh(script: """#!/bin/bash
     set -x
@@ -92,4 +121,5 @@ def call(String name, String docker_regex= "*", Boolean delete_samples = false, 
 
     echo "Running sample funnction $stage_name"
     Sample(name, docker_regex)
+    PublishSample(name)
 }
