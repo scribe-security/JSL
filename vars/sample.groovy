@@ -71,7 +71,7 @@ def Sample(String docker_regex) {
     // DockerInspect(docker_regex)
 }
 
-def call(String docker_regex= "*", Boolean delete_samples = false, Boolean depend_install = false) {
+def call(String docker_regex= "*", Boolean delete_samples = false, Boolean depend_install = true) {
     echo "Sampling $docker_regex $delete_samples $depend_install"
 
     // Path scriptLocation = Paths.get(ScriptSourceUri.uri)
