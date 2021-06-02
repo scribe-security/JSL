@@ -12,8 +12,21 @@ if which apk; then
     # echo 'http://dl-cdn.alpinelinux.org/alpine/v3.9/community' >> /etc/apk/repositories
     # apk add mongodb yaml-cpp=0.6.2-r2
     # echo "127.0.0.1 mongodb" >> /etc/hosts
+    exit 0
 fi
 
+
+if which apt-get; then 
+    who
+    if which sudo; then 
+        echo "SUDO APT found installing depend"
+        sudo apt-get install -y bash jq git
+    else
+        echo "APT found installing depend"
+        apt-get install -y bash jq git
+    fi
+    exit 0
+fi
 
 
 if which apt; then 
@@ -25,6 +38,7 @@ if which apt; then
         echo "APT found installing depend"
         apt install -y bash jq git
     fi
+    exit 0
 fi
 
 fi
