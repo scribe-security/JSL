@@ -43,7 +43,7 @@ git_history()
         jq '.GIT_URL += "'${GIT_URL}'"' | \
         jq '.STAGE_NAME += "'${STAGE_NAME}'"'
     fi
-    exit 0
+    return 0
 }
 
 add_os_envs() {
@@ -63,10 +63,10 @@ env()
     add_os_envs
     source SAMPLE_NAME=$1
     jq -n env
-    exit 0
+    return 0
 }
 
-
+# 2DO should we blacklist '.git?'
 hash_files()
 {
     SAMPLE_NAME=$1
@@ -80,18 +80,45 @@ hash_files()
         jq '.BUILD_TAG += "'${BUILD_TAG}'"' | \
         jq '.GIT_URL += "'${GIT_URL}'"' | \
         jq '.STAGE_NAME += "'${STAGE_NAME}'"'
-    exit 0
+    return 0
 }
+
+sample_diff()
+{
+    SAMPLE_NAME=$1
+    PREV_SAMPLE_STATE=$2
+    diff samples/$STAGE_NAME/$PREV_SAMPLE_STATE samples/$STAGE_NAME/$SAMPLE_NAME
+}
+
+write_sample_state(){
+    SAMPLE_NAME=$1
+    echo $SAMPLE_NAME > samples/samples_state.txt
+    SAMPLE_STATE=$SAMPLE_NAME
+}
+
+read_sample_state(){
+    SAMPLE_NAME=$1
+    SAMPLE_STATE=`cat samples/samples_state.txt || echo $SAMPLE_NAME` 
+}
+
+set -x
 
 opt=$1
 SAMPLE_NAME=$2
-REGEX=$3
+PREV_SAMPLE_NAME=$3
+
+JOB_NAME=job_stab
+BUILD_TAG=build_tag_stab
+GIT_URL=git_url_stab
+STAGE_NAME=stage_name_stab
+mkdir -p "samples/$STAGE_NAME/$SAMPLE_NAME/"
 
 sample_by_type()
 {
     set -x
     opt=$1
     SAMPLE_NAME=$2
+    PREV_SAMPLE_STATE=$3
     JOB_NAME=$(sed 's/ /_/g' <<< "$JOB_NAME")
     BUILD_TAG=$(sed 's/ /_/g' <<< "$BUILD_TAG")
     GIT_URL=$(sed 's/ /_/g' <<< "$GIT_URL")
@@ -102,11 +129,23 @@ sample_by_type()
         env) env $SAMPLE_NAME;;
         hash_files) hash_files $SAMPLE_NAME;;
         git_history) git_history $SAMPLE_NAME;;
-        docker_inspect) docker_inspect $SAMPLE_NAME $REGEX;;
+        docker_inspect) docker_inspect $SAMPLE_NAME;;
+        diff) sample_diff $SAMPLE_NAME $PREV_SAMPLE_STATE;;
+        all)
+             env $SAMPLE_NAME > "samples/$STAGE_NAME/$SAMPLE_NAME/env.json"
+             git_history $SAMPLE_NAME  > "samples/$STAGE_NAME/$SAMPLE_NAME/git_history.json"
+            #  hash_files $SAMPLE_NAME  > "samples/$STAGE_NAME/$SAMPLE_NAME/hash_files.json"
+            sample_diff $SAMPLE_NAME $PREV_SAMPLE_STATE > "samples/$STAGE_NAME/$SAMPLE_NAME/diff.json"
+        ;;
         *) echo "Nothing to do"
         exit 1;;
     esac
 } 
 
 mkdir -p samples/$STAGE_NAME/$SAMPLE_NAME 2> /dev/null
-sample_by_type $opt $SAMPLE_NAME > "samples/$STAGE_NAME/$SAMPLE_NAME/$opt.json"
+
+read_sample_state $SAMPLE_NAME
+sample_by_type $opt $SAMPLE_NAME $SAMPLE_STATE> "samples/$STAGE_NAME/$SAMPLE_NAME/$opt.json"
+write_sample_state $SAMPLE_NAME
+
+rm -rf "samples/$STAGE_NAME/$SAMPLE_NAME/all.json"

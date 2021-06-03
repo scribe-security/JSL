@@ -93,10 +93,16 @@ def DockerInspect(String name) {
     echo "INSPECT: ${INSPECT}"
 }
 
+def Diff(String name) {
+    DIFF = sh(script: """bash collect_scribe_info.sh diff ${name}""",returnStdout: true)
+    echo "Diff: ${DIFF}"
+}
+
 def Sample(String name) {
     GitHistory(name)
     HashFiles(name)
     Env(name)
+    Diff(name)
 }
 
 def ReadDiff(String name) {
