@@ -133,7 +133,7 @@ sample_by_type()
         all)
              env $SAMPLE_NAME > "samples/$STAGE_NAME/$SAMPLE_NAME/env.json"
              git_history $SAMPLE_NAME  > "samples/$STAGE_NAME/$SAMPLE_NAME/git_history.json"
-            #  hash_files $SAMPLE_NAME  > "samples/$STAGE_NAME/$SAMPLE_NAME/hash_files.json"
+             hash_files $SAMPLE_NAME  > "samples/$STAGE_NAME/$SAMPLE_NAME/hash_files.json"
             sample_diff $SAMPLE_NAME $PREV_SAMPLE_STATE > "samples/$STAGE_NAME/$SAMPLE_NAME/diff.json"
         ;;
         *) echo "Nothing to do"
