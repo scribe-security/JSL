@@ -87,7 +87,7 @@ sample_diff()
 {
     SAMPLE_NAME=$1
     PREV_SAMPLE_STATE=$2
-    diff --exclude=diff* samples/$STAGE_NAME/$PREV_SAMPLE_STATE samples/$STAGE_NAME/$SAMPLE_NAME
+    diff --exclude=diff* samples/$PREV_SAMPLE_STATE samples/$SAMPLE_NAME
 }
 
 write_sample_state(){
@@ -131,10 +131,10 @@ sample_by_type()
         docker_inspect) docker_inspect $SAMPLE_NAME;;
         diff) sample_diff $SAMPLE_NAME $PREV_SAMPLE_STATE;;
         all)
-             env $SAMPLE_NAME > "samples/$STAGE_NAME/$SAMPLE_NAME/env.json"
-             git_history $SAMPLE_NAME  > "samples/$STAGE_NAME/$SAMPLE_NAME/git_history.json"
-             hash_files $SAMPLE_NAME  > "samples/$STAGE_NAME/$SAMPLE_NAME/hash_files.json"
-            sample_diff $SAMPLE_NAME $PREV_SAMPLE_STATE > "samples/$STAGE_NAME/$SAMPLE_NAME/diff.json"
+             env $SAMPLE_NAME > "samples/$SAMPLE_NAME/env.json"
+             git_history $SAMPLE_NAME  > "samples/$SAMPLE_NAME/git_history.json"
+             hash_files $SAMPLE_NAME  > "samples/$SAMPLE_NAME/hash_files.json"
+             sample_diff $SAMPLE_NAME $PREV_SAMPLE_STATE > "samples//$SAMPLE_NAME/diff.json"
         ;;
         *) echo "Nothing to do"
         exit 1;;
@@ -149,7 +149,7 @@ if $opt == "all"; then
 fi
 
 read_sample_state $SAMPLE_NAME
-sample_by_type $opt $SAMPLE_NAME $SAMPLE_STATE> "samples/$STAGE_NAME/$SAMPLE_NAME/$opt.json"
+sample_by_type $opt $SAMPLE_NAME $SAMPLE_STATE> "samples/$SAMPLE_NAME/$opt.json"
 write_sample_state $SAMPLE_NAME
 
 rm -rf "samples/$STAGE_NAME/$SAMPLE_NAME/all.json"

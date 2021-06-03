@@ -11,7 +11,7 @@ class ScriptSourceUri {
 
 def ListJson(String name) {
     def json_files
-    dir ("""samples/${env.STAGE_NAME}/${name}""") {
+    dir ("""samples/${name}""") {
       json_files = findFiles(glob: """*.json""")
     }
     return json_files
@@ -33,7 +33,7 @@ def PublishSample(String name) {
     publishHTML (target : [allowMissing: false,
         alwaysLinkToLastBuild: true,
         keepAll: true,
-        reportDir: """samples/${env.STAGE_NAME}/${name}""",
+        reportDir: """samples/${name}""",
         reportFiles: obj_list_files.join(','),
         reportName: name])
 }
