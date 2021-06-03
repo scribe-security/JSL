@@ -101,7 +101,6 @@ def Sample(String name) {
 
 def call(String name, Boolean install_enable = true, Boolean publish_enable = true) {
     echo "Sampling  Sample name: $name, dependency install: $install_enable, publish result: $publish_enable"
-
     writeFile file:'collect_scribe_info.sh', text:libraryResource("collect_scribe_info.sh")
 
     if (install_enable == true) {

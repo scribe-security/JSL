@@ -15,8 +15,8 @@ Search for required plugin, install plugins and restart jenkins
 * Bash
 * jq
 
-### Sample dependency auto install
-Library can be asked to try and install the dpendencies if they are not found via `install_enable` param.
+### Auto install
+Library dependencies auto install can be used via `install_enable` param.
 User running sample needs sufficient permissions for this to succeeded.
 
 ### Manual dependency install
@@ -45,7 +45,8 @@ def call(String name, Boolean install_enable = true, Boolean publish_enable = tr
 
 ```
 sample("first_sample")
-sample("first_sample", install_enable: false)
+sample("first_sample", false, false)
+sample("first_sample", true, false)
 ```
 
 ### Kubernetes JNLP
