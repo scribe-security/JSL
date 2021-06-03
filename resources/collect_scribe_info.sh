@@ -141,7 +141,7 @@ sample_by_type()
     esac
 } 
 
-mkdir -p samples/$STAGE_NAME/$SAMPLE_NAME 2> /dev/null
+mkdir -p samples/$SAMPLE_NAME 2> /dev/null
 
 if $opt == "all"; then
     sample_by_type $opt $SAMPLE_NAME $SAMPLE_STATE
@@ -152,4 +152,4 @@ read_sample_state $SAMPLE_NAME
 sample_by_type $opt $SAMPLE_NAME $SAMPLE_STATE> "samples/$SAMPLE_NAME/$opt.json"
 write_sample_state $SAMPLE_NAME
 
-rm -rf "samples/$STAGE_NAME/$SAMPLE_NAME/all.json"
+rm -rf "samples/$SAMPLE_NAME/all.json"
