@@ -111,7 +111,7 @@ def call(String name, Boolean install_enable = true, Boolean publish_enable = tr
     }
 
     Sample(name)
-    if (install_enable == true) {
+    if (publish_enable == true) {
         PublishSample(name)
     }
 }
