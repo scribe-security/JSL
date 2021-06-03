@@ -99,10 +99,8 @@ def Diff(String name) {
 }
 
 def Sample(String name) {
-    GitHistory(name)
-    HashFiles(name)
-    Env(name)
-    Diff(name)
+    ALL = sh(script: """bash collect_scribe_info.sh all ${name}""",returnStdout: true)
+    echo "ALL: ${ALL}"
 }
 
 def ReadDiff(String name) {

@@ -87,7 +87,7 @@ sample_diff()
 {
     SAMPLE_NAME=$1
     PREV_SAMPLE_STATE=$2
-    diff samples/$STAGE_NAME/$PREV_SAMPLE_STATE samples/$STAGE_NAME/$SAMPLE_NAME
+    diff --exclude=diff* samples/$STAGE_NAME/$PREV_SAMPLE_STATE samples/$STAGE_NAME/$SAMPLE_NAME
 }
 
 write_sample_state(){
@@ -106,11 +106,11 @@ set -x
 opt=$1
 SAMPLE_NAME=$2
 
-# JOB_NAME=job_stab
-# BUILD_TAG=build_tag_stab
-# GIT_URL=git_url_stab
-# STAGE_NAME=stage_name_stab
-# mkdir -p "samples/$STAGE_NAME/$SAMPLE_NAME/"
+JOB_NAME=job_stab
+BUILD_TAG=build_tag_stab
+GIT_URL=git_url_stab
+STAGE_NAME=stage_name_stab
+mkdir -p "samples/$STAGE_NAME/$SAMPLE_NAME/"
 
 sample_by_type()
 {
@@ -142,6 +142,11 @@ sample_by_type()
 } 
 
 mkdir -p samples/$STAGE_NAME/$SAMPLE_NAME 2> /dev/null
+
+if $opt == "all"; then
+    sample_by_type $opt $SAMPLE_NAME $SAMPLE_STATE
+    exit 0
+fi
 
 read_sample_state $SAMPLE_NAME
 sample_by_type $opt $SAMPLE_NAME $SAMPLE_STATE> "samples/$STAGE_NAME/$SAMPLE_NAME/$opt.json"
