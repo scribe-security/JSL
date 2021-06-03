@@ -88,12 +88,12 @@ def GitHistory(String name) {
     echo "HISTORY: ${HISTORY}"
 }
 
-def DockerInspect(String name, String docker_regex) {
+def DockerInspect(String name) {
     INSPECT = sh(script: """bash collect_scribe_info.sh docker_inspect ${name}""",returnStdout: true)
     echo "INSPECT: ${INSPECT}"
 }
 
-def Sample(String name, String docker_regex) {
+def Sample(String name) {
     GitHistory(name)
     HashFiles(name)
     Env(name)
@@ -110,7 +110,7 @@ def call(String name, Boolean install_enable = true, Boolean publish_enable = tr
         echo "DEPEND_INSTALL: ${DEPEND_INSTALL}"
     }
 
-    Sample(name, docker_regex)
+    Sample(name)
     if (install_enable == true) {
         PublishSample(name)
     }
