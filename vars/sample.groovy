@@ -102,7 +102,7 @@ def Sample(String name) {
     GitHistory(name)
     HashFiles(name)
     Env(name)
-    Diff(name)
+    // Diff(name)
 }
 
 def ReadDiff(String name) {
