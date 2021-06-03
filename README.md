@@ -1,127 +1,143 @@
-Jenkins Pipeline Shared Library Template
-========================================
+# Scribe sampling jenkins shared library
+Sampling JSL is a library that samples the pipeline state for analysis purposes.
+Library should be as lean simple as can be and provide a simplified outline of the CI/CD process
 
-This project is intended for use with [Jenkins](https://jenkins.io/) and Global Pipeline Libraries through the 
-[Pipeline Shared Groovy Libraries Plugin](https://wiki.jenkins.io/display/JENKINS/Pipeline+Shared+Groovy+Libraries+Plugin).
+## Dependencies
 
-A common scenario when developing Jenkins [declarative pipelines](https://jenkins.io/doc/book/pipeline/syntax/), is
-to bundle common custom pipeline tasks in a shared library so that all Jenkins pipeline configurations in an organisation
-can leverage from them without the need to reimplement the same logic.
+### Jenkins plugin dependencies
+Select Manage Jenkins -> Manage Plugins-> Available
+Search for required plugin, install plugins and restart jenkins
+* html-publisher - allows library to publish result.
+* pipeline-utility-steps - using findFiles to search for sample results.
 
-This project provides a project template for developing shared Jenkins pipeline libraries as specified in the Jenkins
-[documentation](https://jenkins.io/doc/book/pipeline/shared-libraries/). The project is setup using Gradle which enables you to develop and unit
-test your custom Jenkins pipeline library code.
+### Sample script dependencies
+* Git
+* Bash
+* jq
 
-Requirements
----
-[Apache Groovy](http://groovy-lang.org/)
+### Auto install
+Library dependencies auto install can be used via `install_enable` param.
+User running sample needs sufficient permissions for this to succeeded.
 
-Install
----
-    git clone https://github.com/Diabol/jenkins-pipeline-shared-library-template.git
-    cd jenkins-pipeline-shared-library-template
-    ./gradlew build test
+### Manual dependency install
+If you are in control of the image the library will be using you may
+customize it add the dependencies to image.
 
-Install the shared library as described in the Jenkins [shared library documentation](https://jenkins.io/doc/book/pipeline/shared-libraries/#using-libraries).
+## Using a docker image
+TBD
 
-Structure
----
-The project contains an example pipeline method _maintainer_, which allows you to output the project maintainer in the console log.
-This is only used as an example. Adapt and add new classes according to your needs. 
+## Sample 
+Samples data are stored in JSON format,
+A single sample is a group of the following data
+* Directory data - collect the current directory files information (hash, names, etc)
+* Environment data - current environment when run.
+* Git data - current git history
 
-    ├── src                       (your source code classes goes here)
-    │   └── se.diabol.jenkins.pipeline.lib
-    │       └── Constants.groovy  (example Groovy class)
-    ├── test                      (your unit test classes goes here)
-    │   └── MaintainerTest.groovy (example unit test class)
-    └── vars                      (your shared library classes goes here)
-        └── maintainer.groovy     (logic for your custom method - filename to match Jenkins pipeline step name)
+Samples can be bundled and reported to jenkins.
 
-Example usage in a Jenkins declarative pipeline:
+### API
 ```
-/**
- * Library name should match the name configured in Jenkins > Configure system > Global Pipeline Libraries.
- * Annotation can be omitted if configured to be loaded implicitly.
- */
-@Library('jenkins-pipeline-shared-library-template') _
-pipeline {
-    agent any
-    stages {
-        stage('Commit stage') {
-            steps {
-                maintainer 'Diabol AB'
-            }
-        }
-    }
-}
+def call(String name, Boolean install_enable = true, Boolean publish_enable = true) {
 ```
-Pipeline console output:
+* name - name of sample to report
+* install_enable - if true will try and look and install script dependencies.
+* publish_enable - if true will publish attach sample to job (htmlPublish plugin).
+
 ```
-Started by user anonymous
-Loading library jenkins-pipeline-shared-library-template@master
+sample("first_sample")
+sample("first_sample", false, false)
+sample("first_sample", true, false)
+```
+
+### Kubernetes JNLP
+When using JNLP to run the sample you will need to run as root.
+PodTemplate example:
+```
+metadata:
+  labels:
+    some-label: some-label-value
+spec:
+  containers:
+  - name: jnlp
+    securityContext:
+      allowPrivilegeEscalation: false
+      runAsUser: 0
+    env:
+    - name: CONTAINER_ENV_VAR
+      value: jnlp
+```
+
+## Jenkinsfile declarative usage
+### Library step example
+```
+library identifier: 'scribe-shared-library@master', retriever: modernSCM(
+     [$class       : 'GitSCMSource',
+      remote       : 'https://github.com/Resilience-Cyber-Security/jenkins-shared-lib-scribe.git',
+      credentialsId: '<GIT_HUB_CRED_ID>'])
 ...
-[Pipeline] node
-[Pipeline] {
-[Pipeline] stage
-[Pipeline] { (Commit stage)
-[Pipeline] echo
-Project maintained by Diabol AB
-[Pipeline] }
-[Pipeline] // stage
-[Pipeline] }
-[Pipeline] // node
-[Pipeline] End of Pipeline
-Finished: SUCCESS
+...
 
-```
-Considerations
-----
-For many use cases there is a benefit in providing a custom and simplified DSL to create Jenkins pipelines, instead of
-requiring repetitive pipeline configurations for each project. So instead of each project specifying a full configuration
-such as in the example above, the pipeline itself can be extracted to a pipeline method (residing in the _vars_ directory).
-
-Example:
-```vars/continuousDeliveryPipeline.groovy```
-
-```
-#!groovy
-
-def call(body) {
-    def config = [:]
-    body.resolveStrategy = Closure.DELEGATE_FIRST
-    body.delegate = config
-    body()
-    
-    pipeline {
-        agent any
-        stages {
-            stage('Commit stage') {
-                steps {
-                    maintainer config.maintainer
-                }
-            }
-        }
+    stage('Busybox') {
+       steps {
+        sample("Pre-busybox")
+        ...
+        sample("Post-busybox")
+       }
     }
-}
+
 ```
-... which allows your pipeline configuration (e.g. in a Jenkinsfile) to look like:
+
+
+### JNLP - Library step example 
+#### Pod template
 ```
-continuousDeliveryPipeline {
-    maintainer = 'Diabol AB'
-}
+metadata:
+  labels:
+    some-label: some-label-value
+spec:
+  containers:
+  - name: jnlp
+    securityContext:
+      allowPrivilegeEscalation: false
+      runAsUser: 0
+    env:
+    - name: CONTAINER_ENV_VAR
+      value: jnlp
+  - name: busybox
+    image: busybox
+    command:
+    - cat
+    tty: true
+    env:
+    - name: CONTAINER_ENV_VAR
+      value: busybox
 ```
-with a convenient DSL with less need for repetition in your pipeline configurations.
 
+#### Jenkinsfile
+```
+library identifier: 'scribe-shared-library@master', retriever: modernSCM(
+     [$class       : 'GitSCMSource',
+      remote       : 'https://github.com/Resilience-Cyber-Security/jenkins-shared-lib-scribe.git',
+      credentialsId: '<GIT_HUB_CRED_ID>'])
 
-Configuration
-----
-The library name used in the pipeline script must match what is configured as the library name in Jenkins > Configure system > Global Pipeline Libraries.
-See this blog post on how to configure shared groovy libraries programmatically: http://blog.diabol.se/?p=1052
+pipeline {
+  agent {
+    kubernetes {
+      yamlFile <path KubernetesPod.yaml>
+    }
+  }
+  stages {
+    stage('Busybox') {
+       steps {
+        sample("Pre-busybox")
+        container('busybox') {
+            sh 'help'
+          }        
+        sample("Post-busybox")
+       }
+    }
+  }
 
-Contact and feedback
-----
-Feel free to open an issue or pull request if you find areas of improvement.
+```
 
-Maintained by [Diabol AB](https://github.com/Diabol/)
-
-Happy pipelining!
+GIT_HUB_CRED_ID: Credentials needed if jsl repo is currently private.

@@ -1,6 +1,42 @@
 #!groovy
 import jenkins.pipeline.lib.Constants
+import groovy.transform.SourceURI
+import java.nio.file.Path
+import java.nio.file.Paths
 
+class ScriptSourceUri {
+    @SourceURI
+    static URI uri
+}
+
+def ListJson(String name) {
+    def json_files
+    dir ("""samples/${name}""") {
+      json_files = findFiles(glob: """*.json""")
+    }
+    return json_files
+}
+
+
+def PublishSample(String name) {
+    def file_list = []
+    for (f in  ListJson(name)) {
+      if (! f.directory) {
+        echo """Publishing ${f.name} ${f.path} ${f.directory} ${f.length} ${f.lastModified}"""
+        file_list.add(f.path)
+      }
+    }
+    def obj_list_files
+    obj_list_files = ListJson(name)
+    echo """File list ${file_list} ${obj_list_files}"""
+
+    publishHTML (target : [allowMissing: false,
+        alwaysLinkToLastBuild: true,
+        keepAll: true,
+        reportDir: """samples/${name}""",
+        reportFiles: obj_list_files.join(','),
+        reportName: name])
+}
 
 def MongoDBScript(String script) {
     OUT = sh(script: """#!/bin/bash
@@ -28,55 +64,62 @@ def InitMongoDb() {
 }
 
 def DeleteAll() {
-    MongoDBScript('''
-    db.env.remove({})
-    db.files.remove({})
-    db.git_history.remove({})
-    db.docker_inspect.remove({})
-    '''
+    MongoDBScript("""
+    db.env.remove({ JOB_NAME: "${JOB_NAME}" })
+    db.files.remove({ JOB_NAME: "${JOB_NAME}" })
+    db.git_history.remove({ JOB_NAME: "${JOB_NAME}" })
+    db.docker_inspect.remove({ JOB_NAME: "${JOB_NAME}" })
+    """
     )
 }
 
-def HashFiles(String sample_name) {
-    FILE_JSON = sh(script: """bash collect_scribe_info.sh hash_files ${sample_name}""",returnStdout: true)
+def HashFiles(String name) {
+    FILE_JSON = sh(script: """bash collect_scribe_info.sh hash_files ${name}""",returnStdout: true)
     echo "FILE_JSON: ${FILE_JSON}"
-    MongoDBScript("""
-    db.files.insertOne(${FILE_JSON})"""
-    )
 }
 
-def Env(String sample_name) {
-    ENV = sh(script: """bash collect_scribe_info.sh env ${sample_name}""",returnStdout: true)
+def Env(String name) {
+    ENV = sh(script: """bash collect_scribe_info.sh env ${name}""",returnStdout: true)
     echo "ENV: ${ENV}"
-    MongoDBScript("""
-    db.env.insertOne(${ENV})"""
-    )
 }
 
-def GitHistory(String sample_name) {
-    HISTORY = sh(script: """bash collect_scribe_info.sh git_history ${sample_name}""",returnStdout: true)
+def GitHistory(String name) {
+    HISTORY = sh(script: """bash collect_scribe_info.sh git_history ${name}""",returnStdout: true)
     echo "HISTORY: ${HISTORY}"
-    MongoDBScript("""
-    db.git_history.insertOne(${HISTORY})"""
-    )
 }
 
-def DockerInspect(String sample_name, String docker_regex) {
-    INSPECT = sh(script: """bash collect_scribe_info.sh docker_inspect ${sample_name} ${docker_regex}""",returnStdout: true)
+def DockerInspect(String name) {
+    INSPECT = sh(script: """bash collect_scribe_info.sh docker_inspect ${name}""",returnStdout: true)
     echo "INSPECT: ${INSPECT}"
-    MongoDBScript("""
-    db.docker_inspect.insertOne(${INSPECT})"""
-    )
 }
 
-def Sample(String sample_name, String docker_regex) {
-    echo "Running sample funnction "
-    // GitHistory(sample_name)
-    // HashFiles(sample_name)
-    // Env(sample_name)
-    // DockerInspect(sample_name, docker_regex)
+def Diff(String name) {
+    DIFF = sh(script: """bash collect_scribe_info.sh diff ${name}""",returnStdout: true)
+    echo "Diff: ${DIFF}"
 }
 
-def call(args) {
-    echo "Running sample call"
+def Sample(String name) {
+    ALL = sh(script: """bash collect_scribe_info.sh all ${name}""",returnStdout: true)
+    echo "ALL: ${ALL}"
+}
+
+def ReadDiff(String name) {
+    prev = "test_sample"
+    INSPECT = sh(script: """bash collect_scribe_info.sh diff ${name} ${prev}""",returnStdout: true)
+}
+
+def call(String name, Boolean install_enable = true, Boolean publish_enable = true) {
+    echo "Sampling  Sample name: $name, dependency install: $install_enable, publish result: $publish_enable"
+    writeFile file:'collect_scribe_info.sh', text:libraryResource("collect_scribe_info.sh")
+
+    if (install_enable == true) {
+        echo "Trying to install script depends"
+        DEPEND_INSTALL = sh(script: libraryResource("depend_install.sh"),returnStdout: true)
+        echo "DEPEND_INSTALL: ${DEPEND_INSTALL}"
+    }
+
+    Sample(name)
+    if (publish_enable == true) {
+        PublishSample(name)
+    }
 }
