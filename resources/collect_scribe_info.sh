@@ -106,11 +106,11 @@ set -x
 opt=$1
 SAMPLE_NAME=$2
 
-JOB_NAME=job_stab
-BUILD_TAG=build_tag_stab
-GIT_URL=git_url_stab
-STAGE_NAME=stage_name_stab
-mkdir -p "samples/$STAGE_NAME/$SAMPLE_NAME/"
+# JOB_NAME=job_stab
+# BUILD_TAG=build_tag_stab
+# GIT_URL=git_url_stab
+# STAGE_NAME=stage_name_stab
+# mkdir -p "samples/$STAGE_NAME/$SAMPLE_NAME/"
 
 sample_by_type()
 {
