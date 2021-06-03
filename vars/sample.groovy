@@ -99,6 +99,11 @@ def Sample(String name) {
     Env(name)
 }
 
+def ReadDiff(String name) {
+    prev = "test_sample"
+    INSPECT = sh(script: """bash collect_scribe_info.sh diff ${name} ${prev}""",returnStdout: true)
+}
+
 def call(String name, Boolean install_enable = true, Boolean publish_enable = true) {
     echo "Sampling  Sample name: $name, dependency install: $install_enable, publish result: $publish_enable"
     writeFile file:'collect_scribe_info.sh', text:libraryResource("collect_scribe_info.sh")
