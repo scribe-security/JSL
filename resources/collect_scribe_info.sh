@@ -61,7 +61,7 @@ add_os_envs() {
 env()
 {
     add_os_envs
-    source SAMPLE_NAME=$1
+    SAMPLE_NAME=$1
     jq -n env
     return 0
 }
@@ -105,7 +105,6 @@ set -x
 
 opt=$1
 SAMPLE_NAME=$2
-PREV_SAMPLE_NAME=$3
 
 JOB_NAME=job_stab
 BUILD_TAG=build_tag_stab
