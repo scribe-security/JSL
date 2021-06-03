@@ -1,9 +1,7 @@
 #!/bin/bash
-# - DO NOT THIS SCRIPT IN ACTUAL PRODUCT  (only for internal testing)
-# NOTE: INPUT is places in jenkins shell step -  Token Recognition and parameter expantion will run from input if found.
-# I have tried to prevent this (see weird sed in docker_inspect) but have not found a solution - because this is just a base script for our own learning process
-# i have let it go 
-# set -x
+# - DO NOT THIS SCRIPT IN ACTUAL PRODUCT
+# Library shoudl be used only pipeline analysis purposes
+
 tempfile() {
     tempprefix=$(basename "$0")
     mktemp /tmp/${tempprefix}.XXXXXX
@@ -11,6 +9,8 @@ tempfile() {
 
 docker_inspect()
 {
+    # NOTE: Base Token Recognition and parameter expantion is run on input (script injection vulnrability).
+    # I have tried to prevent this (see weird sed in docker_inspect) but have not found a better solution yet - go implementation will prevent such weird logic and such
     SAMPLE_NAME=$1
     REGEX=$1
     docker image inspect  $(docker image ls |  awk "{print \$1}" | egrep $REGEX)|  sed -e 's/\$(/\\\\%(/g' | jq -n '.IMAGES = inputs' | \
@@ -30,12 +30,6 @@ git_history()
     HISTORY_TMP=$(tempfile)
     trap 'rm -f $HISTORY_TMP' EXIT
     if git -C . rev-parse 2> /dev/null; then
-        # HISTORY=$(git --no-pager log \
-        # --pretty=format:'{%n  "commit": "%H",%n  "abbreviated_commit": "%h",%n  "tree": "%T",%n  "abbreviated_tree": "%t",%n  "parent": "%P",%n  "abbreviated_parent": "%p",%n  "refs": "%D",%n  "encoding": "%e",%n  "subject": "%s",%n  "sanitized_subject_line": "%f" ,%n  "commit_notes": "%N",%n  "author": {%n    "name": "%aN",%n    "email": "%aE",%n    "date": "%aD"%n  },%n  "commiter": {%n    "name": "%cN",%n    "email": "%cE",%n    "date": "%cD"%n  }  %n},' | \
-        # sed "$ s/,$//" | \
-        # sed ':a;N;$!ba;s/\r\n\([^{]\)/\\n\1/g' | \
-        # awk 'BEGIN { print("[") } { print($0) } END { print("]") }')
-
         git --no-pager log \
             --pretty=format:'{%n  "commit": "%H",%n  "abbreviated_commit": "%h",%n  "tree": "%T",%n  "abbreviated_tree": "%t",%n  "parent": "%P",%n  "abbreviated_parent": "%p",%n  "refs": "%D",%n  "encoding": "%e",%n  "subject": "%s",%n  "sanitized_subject_line": "%f" ,%n  "commit_notes": "%N",%n  "author": {%n    "name": "%aN",%n    "email": "%aE",%n    "date": "%aD"%n  },%n  "commiter": {%n    "name": "%cN",%n    "email": "%cE",%n    "date": "%cD"%n  }  %n},' | \
             sed "$ s/,$//" | \

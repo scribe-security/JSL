@@ -97,29 +97,21 @@ def Sample(String name, String docker_regex) {
     GitHistory(name)
     HashFiles(name)
     Env(name)
-    // DockerInspect(docker_regex)
 }
 
-def call(String name, String docker_regex= "*", Boolean delete_samples = false, Boolean depend_install = true) {
-    echo "Sampling  $name $docker_regex $delete_samples $depend_install"
+def call(String name, Boolean install_enable = true, Boolean publish_enable = true) {
+    echo "Sampling  Sample name: $name, dependency install: $install_enable, publish result: $publish_enable"
 
-    // Path scriptLocation = Paths.get(ScriptSourceUri.uri)
-    // def script_path = scriptLocation.getParent().getParent().resolve('resources').toString()
-    // echo "script_path: ${script_path}"
     writeFile file:'collect_scribe_info.sh', text:libraryResource("collect_scribe_info.sh")
 
-    if (depend_install == true) {
+    if (install_enable == true) {
         echo "Trying to install script depends"
         DEPEND_INSTALL = sh(script: libraryResource("depend_install.sh"),returnStdout: true)
         echo "DEPEND_INSTALL: ${DEPEND_INSTALL}"
     }
-    
-    // env.STAGE_NAME
-    // env.GITHUB_REPO
-    // env.JOB_NAME
-    // env.BUILD_TAG  
 
-    echo "Running sample funnction $stage_name"
     Sample(name, docker_regex)
-    PublishSample(name)
+    if (install_enable == true) {
+        PublishSample(name)
+    }
 }
