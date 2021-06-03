@@ -71,7 +71,7 @@ hash_files()
 {
     SAMPLE_NAME=$1
     WORKDIR=$(pwd)
-    find . -type f -name "*" | 
+    find . -type f -name "*" -not -path ".git*" | 
     while read line; do 
         jq -n --arg name "$(basename "$line")" --arg HASH "$(sha256sum $line | awk '{ print $1 }')" --arg path "$line" '{name: $name, path: $path, hash: $HASH}'
     done | jq -n '.files |= [inputs]' | jq '.WORKDIR += "'${WORKDIR}'"' | \
