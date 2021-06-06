@@ -57,7 +57,7 @@
   <table class="section">
     <tr class="tr-title">
       <td class="td-title-main" colspan=2>
-        BUILD HELLLOO ${build.result ?: 'COMPLETED'}
+        BUILD ${build.result ?: 'COMPLETED'}
       </td>
     </tr>
     <tr>
