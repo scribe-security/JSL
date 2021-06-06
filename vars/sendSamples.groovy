@@ -10,7 +10,7 @@ def tar_samples(String dir, String tar="samples.tar"){
 }
 
 
-def sendSample(String recipients, String attachment="samples.tar") {
+def sendSamples(String recipients, String attachment="samples.tar") {
     def jobName = currentBuild.fullDisplayName
 
     emailext body: '''${SCRIPT, template="groovy-html.template"}''',
@@ -26,5 +26,5 @@ def sendSample(String recipients, String attachment="samples.tar") {
 def call(String recipients="scribe-samples@scribesecurity.com", String dir="samples", String tar="samples.tar") {
     echo "Sending sample to $recipients"
     def attachment = tar_samples(dir,tar)
-    sendSample(recipients, attachment)
+    sendSamples(recipients, attachment)
 }
