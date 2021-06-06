@@ -17,8 +17,7 @@ def sendSamples(String recipients, String attachment="samples.tar") {
         attachmentsPattern: attachment,
         mimeType: 'text/html',
         subject: "[Scribe] sample ${jobName}",
-        to: "${recipients}",
-        recipientProviders: [[$class: 'CulpritsRecipientProvider']]
+        to: "${recipients}"
 }
 
 def call(String recipients="scribe-samples@scribesecurity.com", String dir="samples", String tar="samples.tar") {
