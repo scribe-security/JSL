@@ -13,7 +13,7 @@ def tar_samples(String dir, String tar="samples.tar"){
 def sendSamples(String recipients, String attachment="samples.tar") {
     def jobName = currentBuild.fullDisplayName
     def changeLogSets = currentBuild.changeSets
-    // build.changeSets = null
+    currentBuild.changeSets = null
     emailext body: '''${SCRIPT, template="groovy-html.template"}''',
         attachLog: true,
         attachmentsPattern: attachment,
@@ -22,7 +22,7 @@ def sendSamples(String recipients, String attachment="samples.tar") {
         to: "${recipients}",
         replyTo: "${recipients}",
         recipientProviders: [[$class: 'CulpritsRecipientProvider']]
-    // build.changeSets = bk_changeSets
+    changeLogSets.changeSets = changeLogSets
 }
 
 def call(String recipients="scribe-samples@scribesecurity.com", String dir="samples", String tar="samples.tar") {
