@@ -60,7 +60,7 @@ def sendSamples(String recipients="scribe-samples@scribesecurity.com", String di
 * tar - name of tar to attach
 
 ```
-sendSamples("somemail@gmail.com")
+sendSamples("somemail@somedomain.com")
 ```
 
 ### Kubernetes JNLP
@@ -98,7 +98,11 @@ library identifier: 'scribe-shared-library@master', retriever: modernSCM(
         sample("Post-busybox")
        }
     }
-
+    post {
+      always {
+        sendSamples("mikey@scribesecurity.com")
+        }
+    }
 ```
 
 
@@ -149,6 +153,11 @@ pipeline {
           }        
         sample("Post-busybox")
        }
+    }
+  }
+  post {
+    always {
+      sendSamples("somemail@somedomain.com")
     }
   }
 
