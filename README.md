@@ -9,6 +9,7 @@ Select Manage Jenkins -> Manage Plugins-> Available
 Search for required plugin, install plugins and restart jenkins
 * html-publisher - allows library to publish result.
 * pipeline-utility-steps - using findFiles to search for sample results.
+* email extension plugin - used to send all samples to service email.
 
 ### Sample script dependencies
 * Git
