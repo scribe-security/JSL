@@ -80,6 +80,7 @@ hash_files()
         jq '.BUILD_TAG += "'${BUILD_TAG}'"' | \
         jq '.GIT_URL += "'${GIT_URL}'"' | \
         jq '.STAGE_NAME += "'${STAGE_NAME}'"'
+
     return 0
 }
 
@@ -87,7 +88,7 @@ sample_diff()
 {
     SAMPLE_NAME=$1
     PREV_SAMPLE_STATE=$2
-    diff --exclude=diff* samples/$PREV_SAMPLE_STATE samples/$SAMPLE_NAME
+    diff --exclude=diff* -U2 samples/$PREV_SAMPLE_STATE samples/$SAMPLE_NAME
 }
 
 write_sample_state(){
@@ -101,7 +102,7 @@ read_sample_state(){
     SAMPLE_STATE=`cat samples/samples_state.txt || echo $SAMPLE_NAME` 
 }
 
-set -x
+# set -x
 
 opt=$1
 SAMPLE_NAME=$2
@@ -114,7 +115,6 @@ SAMPLE_NAME=$2
 
 sample_by_type()
 {
-    set -x
     opt=$1
     SAMPLE_NAME=$2
     PREV_SAMPLE_STATE=$3
@@ -134,7 +134,7 @@ sample_by_type()
              env $SAMPLE_NAME > "samples/$SAMPLE_NAME/env.json"
              git_history $SAMPLE_NAME  > "samples/$SAMPLE_NAME/git_history.json"
              hash_files $SAMPLE_NAME  > "samples/$SAMPLE_NAME/hash_files.json"
-             sample_diff $SAMPLE_NAME $PREV_SAMPLE_STATE > "samples//$SAMPLE_NAME/diff.json"
+             sample_diff $SAMPLE_NAME $PREV_SAMPLE_STATE > "samples/$SAMPLE_NAME/diff.json"
         ;;
         *) echo "Nothing to do"
         exit 1;;
@@ -142,8 +142,7 @@ sample_by_type()
 } 
 
 mkdir -p samples/$SAMPLE_NAME 2> /dev/null
-
-if $opt == "all"; then
+if [ "$opt" == "all" ]; then
     sample_by_type $opt $SAMPLE_NAME $SAMPLE_STATE
     exit 0
 fi
