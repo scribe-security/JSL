@@ -37,8 +37,9 @@ A single sample is a group of the following data
 Samples can be bundled and reported to jenkins.
 
 ### API
+Sample data and write to sample dir
 ```
-def call(String name, Boolean install_enable = true, Boolean publish_enable = true) {
+def sample(String name, Boolean install_enable = true, Boolean publish_enable = true)
 ```
 * name - name of sample to report
 * install_enable - if true will try and look and install script dependencies.
@@ -48,6 +49,18 @@ def call(String name, Boolean install_enable = true, Boolean publish_enable = tr
 sample("first_sample")
 sample("first_sample", false, false)
 sample("first_sample", true, false)
+```
+
+Send sample dir to mail
+```
+def sendSamples(String recipients="scribe-samples@scribesecurity.com", String dir="samples", String tar="samples.tar") {
+```
+* recipients - send samples to mail
+* dir - sample directory to attach to mail
+* tar - name of tar to attach
+
+```
+sendSamples("somemail@gmail.com")
 ```
 
 ### Kubernetes JNLP
