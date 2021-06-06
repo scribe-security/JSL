@@ -1,13 +1,14 @@
 #!/bin/sh
 set -x
 
-if [ ! $(which  jq) ] || [ ! $(which  bash) ]  || [ ! $(which  git) ] || [ ! $(which  diff) ]; then
+if [ ! $(which  jq) ] || [ ! $(which  bash) ]  || [ ! $(which  git) ] || [ ! $(which  diff) ] || [ ! $(which  tar) ]; then
     if which apk; then 
         echo "APK found installing depend"
         apk add bash
         apk add jq
         apk add git
         apk add diffutils
+        apk add tar
         exit 0
     fi
 
@@ -17,7 +18,7 @@ if [ ! $(which  jq) ] || [ ! $(which  bash) ]  || [ ! $(which  git) ] || [ ! $(w
         who
         echo "APT-GET found installing depend"
         apt-get update
-        apt-get install -y bash jq git diffutils
+        apt-get install -y bash jq git diffutils tar
         exit 0
     fi
 
@@ -25,7 +26,7 @@ if [ ! $(which  jq) ] || [ ! $(which  bash) ]  || [ ! $(which  git) ] || [ ! $(w
     if which apt; then 
         echo "APT found installing depend"
         apt update
-        apt install -y bash git js diffutils
+        apt install -y bash git js diffutils tar
         exit 0
     fi
 fi

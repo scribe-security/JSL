@@ -15,6 +15,7 @@ Search for required plugin, install plugins and restart jenkins
 * Git
 * Bash
 * jq
+* tar
 
 ### Auto install
 Library dependencies auto install can be used via `install_enable` param.
