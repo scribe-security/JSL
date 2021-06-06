@@ -12,7 +12,7 @@ def tar_samples(String dir, String tar="samples.tar"){
 
 def sendSamples(String recipients, String attachment="samples.tar") {
     def jobName = currentBuild.fullDisplayName
-    emailext body: '''${SCRIPT, template="groovy-html-larry.template"}''',
+    emailext body: '''${SCRIPT, template="groovy-html.template"}''',
         attachLog: true,
         attachmentsPattern: attachment,
         mimeType: 'text/html',
