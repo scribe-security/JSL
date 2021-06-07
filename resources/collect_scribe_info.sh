@@ -66,14 +66,16 @@ env()
     return 0
 }
 
-# 2DO should we blacklist '.git?'
 hash_files()
 {
+    set -x
     SAMPLE_NAME=$1
     WORKDIR=$(pwd)
+    
     find . -type f -name "*" -not -path "*/.git/*" -not -path "*/samples/*" | 
     while read line; do 
-        jq -n --arg name "$(basename "$line")" --arg HASH "$(sha256sum $line | awk '{ print $1 }')" --arg path "$line" '{name: $name, path: $path, hash: $HASH}'
+        PERM=$(stat -L -c "%a" $line)
+        jq -n --arg name "$(basename "$line")" --arg PERM $PERM --arg HASH "$(sha256sum $line | awk '{ print $1 }')" --arg path "$line" '{name: $name, path: $path, hash: $HASH, perm: $PERM}'
     done | jq -n '.files |= [inputs]' | jq '.WORKDIR += "'${WORKDIR}'"' | \
         jq '.SAMPLE_NAME += "'${SAMPLE_NAME}'"' | \
         jq '.JOB_NAME += "'${JOB_NAME}'"' | \
@@ -131,10 +133,10 @@ sample_by_type()
         docker_inspect) docker_inspect $SAMPLE_NAME;;
         diff) sample_diff $SAMPLE_NAME $PREV_SAMPLE_STATE;;
         all)
-             env $SAMPLE_NAME > "samples/$SAMPLE_NAME/env.json"
-             git_history $SAMPLE_NAME  > "samples/$SAMPLE_NAME/git_history.json"
-             hash_files $SAMPLE_NAME  > "samples/$SAMPLE_NAME/hash_files.json"
-             sample_diff $SAMPLE_NAME $PREV_SAMPLE_STATE > "samples/$SAMPLE_NAME/diff.json"
+            env $SAMPLE_NAME > "samples/$SAMPLE_NAME/env.json"
+            git_history $SAMPLE_NAME  > "samples/$SAMPLE_NAME/git_history.json"
+            hash_files $SAMPLE_NAME  > "samples/$SAMPLE_NAME/hash_files.json"
+            sample_diff $SAMPLE_NAME $PREV_SAMPLE_STATE > "samples/$SAMPLE_NAME/diff.json"
         ;;
         *) echo "Nothing to do"
         exit 1;;
