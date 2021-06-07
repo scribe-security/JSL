@@ -145,7 +145,9 @@ sample_by_type()
 
 mkdir -p samples/$SAMPLE_NAME 2> /dev/null
 if [ "$opt" == "all" ]; then
+    read_sample_state $SAMPLE_NAME
     sample_by_type $opt $SAMPLE_NAME $SAMPLE_STATE
+    write_sample_state $SAMPLE_NAME
     exit 0
 fi
 
