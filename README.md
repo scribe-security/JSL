@@ -87,7 +87,7 @@ spec:
 ```
 library identifier: 'scribe-shared-library@master', retriever: modernSCM(
      [$class       : 'GitSCMSource',
-      remote       : 'https://github.com/Resilience-Cyber-Security/sampling.git',
+      remote       : 'https://github.com/scribe-security/sampling.git',
       credentialsId: '<GIT_HUB_CRED_ID>'])
 ...
 ...
@@ -136,7 +136,7 @@ spec:
 ```
 library identifier: 'scribe-shared-library@master', retriever: modernSCM(
      [$class       : 'GitSCMSource',
-      remote       : 'https://github.com/Resilience-Cyber-Security/sampling.git',
+      remote       : 'https://github.com/scribe-security/sampling.git',
       credentialsId: '<GIT_HUB_CRED_ID>'])
 
 pipeline {
