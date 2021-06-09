@@ -31,6 +31,7 @@ customize it add the dependencies to image.
 * SMTP port -> set `587`
 * SMTP Username -> mail username to login to smtp with
 * SMTP Password -> Select use TLS.
+* Set `System Admin e-mail address` to jenkins admin mail
 
 ## Setup sampletest
 * New Item -> set name `sampletest` -> select Pipeline  -> OK
