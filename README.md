@@ -25,6 +25,21 @@ User running sample needs sufficient permissions for this to succeeded.
 If you are in control of the image the library will be using you may
 customize it add the dependencies to image.
 
+## Setup mail ext plugin
+* Manage Jenkins -> global configuration 
+* SMTP server -> set `smtp.gmail.com`
+* SMTP port -> set `587`
+* SMTP Username -> mail username to login to smtp with
+* SMTP Password -> Select use TLS.
+
+## Setup sampletest
+* New Item -> set name `sampletest` -> select Pipeline  -> OK
+* Select `Discard old builds` -> Max builds ~ 5
+* Pipleline -> Definition -> Select `Pipeline script from SCM`
+* SCM -> select `Git` -> Set `https://github.com/scribe-security/kubernetes-jenkins-boilerplate.git`
+* Credintials -> Add -> Set access to private SCM -> Set id `GitHubCredId`
+* Run job - sampletest sends a mail sent to `alice-tester@scribesecurity.com`
+
 ## Using a docker image
 TBD
 
@@ -114,7 +129,8 @@ metadata:
   labels:
     some-label: some-label-value
 spec:
-  containers:
+  containers:set -g default-terminal "screen-256color"
+
   - name: jnlp
     securityContext:
       allowPrivilegeEscalation: false
