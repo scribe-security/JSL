@@ -38,7 +38,7 @@ A single sample is a group of the following data
 Samples can be bundled and reported to jenkins.
 
 ### API
-Sample data and write to sample dir
+**Sample data to sample dir**
 ```
 def sample(String name, Boolean install_enable = true, Boolean publish_enable = true)
 ```
@@ -52,7 +52,7 @@ sample("first_sample", false, false)
 sample("first_sample", true, false)
 ```
 
-Send sample dir to mail
+**Send sample dir to mail**
 ```
 def sendSamples(String recipients="scribe-samples@scribesecurity.com", String dir="samples", String tar="samples.tar") {
 ```
@@ -65,7 +65,7 @@ sendSamples("somemail@somedomain.com")
 ```
 
 ### Kubernetes JNLP
-When using JNLP to run the sample you will need to run as root.
+When using the vanilla JNLP to run the sample you will need to run as root and enable the auto install api.
 PodTemplate example:
 ```
 metadata:
@@ -101,7 +101,7 @@ library identifier: 'scribe-shared-library@master', retriever: modernSCM(
     }
     post {
       always {
-        sendSamples("mikey@scribesecurity.com")
+        sendSamples("somemail@somedomain.com")
         }
     }
 ```
