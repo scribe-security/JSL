@@ -34,11 +34,15 @@ customize it add the dependencies to image.
 * Set `System Admin e-mail address` to jenkins admin mail
 
 ## Setup sampletest
+See `https://github.com/scribe-security/kubernetes-jenkins-boilerplate.git` for more details.
+* Install publish html, email extention, git parameter.
 * New Item -> set name `sampletest` -> select Pipeline  -> OK
 * Select `Discard old builds` -> Max builds ~ 5
 * Pipleline -> Definition -> Select `Pipeline script from SCM`
 * SCM -> select `Git` -> Set `https://github.com/scribe-security/kubernetes-jenkins-boilerplate.git`
 * Credintials -> Add -> Set access to private SCM -> Set id `GitHubCredId`
+* Jenkinsfile path -> `examples/sampletest/Jenkinsfile`
+* Select `this pipleine is paramitized` -> add `git parameter` -> name `BRANCH_NAME` -> default `master`
 * Run job - sampletest sends a mail sent to `alice-tester@scribesecurity.com`
 
 ## Using a docker image
