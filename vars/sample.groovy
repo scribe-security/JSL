@@ -132,18 +132,44 @@ def ReadDiff(String name) {
 //     echo "Bom  - $target"
 // }
 
-def call(String target, Integer install_enable = 0, Boolean publish_enable = true) {
-    echo "Sampling  target: $target, dependency install: $install_enable, publish result: $publish_enable"
-    // writeFile file:'collect_scribe_info.sh', text:libraryResource("collect_scribe_info.sh")
 
-    // if (install_enable == true) {
-    //     echo "Trying to install script depends"
-    //     DEPEND_INSTALL = sh(script: libraryResource("depend_install.sh"),returnStdout: true)
-    //     echo "DEPEND_INSTALL: ${DEPEND_INSTALL}"
-    // }
-
+def call(String target,
+  String verbose,
+  String config,
+  String format,
+  String output_directory,
+  String output_file,
+  String name,
+  String[] env,
+  String[] label,
+  String filter_regex,
+  String collect_regex,
+  Boolean force,
+  String attest_config,
+  String attest_name,
+  String attest_default,
+  Boolean scribe_enable,
+  String scribe_url,
+  String scribe_loginurl,
+  String scribe_audience,
+  String context_dir) {
+    echo "Bom  - $target"
     Sample(target)
-    // if (publish_enable == true) {
-    //     PublishSample(target)
-    // }
 }
+
+
+// def call(String target, Integer install_enable = 0, Boolean publish_enable = true) {
+//     echo "Sampling  target: $target, dependency install: $install_enable, publish result: $publish_enable"
+//     // writeFile file:'collect_scribe_info.sh', text:libraryResource("collect_scribe_info.sh")
+
+//     // if (install_enable == true) {
+//     //     echo "Trying to install script depends"
+//     //     DEPEND_INSTALL = sh(script: libraryResource("depend_install.sh"),returnStdout: true)
+//     //     echo "DEPEND_INSTALL: ${DEPEND_INSTALL}"
+//     // }
+
+//     Sample(target)
+//     // if (publish_enable == true) {
+//     //     PublishSample(target)
+//     // }
+// }
