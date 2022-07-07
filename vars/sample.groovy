@@ -62,6 +62,7 @@ def call(String target,
 ) {
     def file_list = []
     echo "Bom  - $target"
+        // Integer verbose = 2,
 
     if (config != "") {
         file_list.add("--config")
@@ -71,5 +72,74 @@ def call(String target,
         file_list.add("--format")
         file_list.add(format)
     }
+    if (output_directory != "") {
+        file_list.add("--output-directory")
+        file_list.add(output_directory)
+    }
+    if (output_file != "") {
+        file_list.add("--output-file")
+        file_list.add(output_file)
+    }
+    if (name != "") {
+        file_list.add("--name")
+        file_list.add(name)
+    }
+        //     String[] env = [],
+        // String[] label  = [],
+
+    if (filter_regex != "") {
+        file_list.add("--filter-regex")
+        file_list.add(filter_regex)
+    }
+    if (collect_regex != "") {
+        file_list.add("--collect-regex")
+        file_list.add(collect_regex)
+    }
+
+    if (force) {
+        file_list.add("-f")
+    }
+
+    if (attest_config != "") {
+        file_list.add("--attest.config")
+        file_list.add(attest_config)
+    }
+    if (attest_name != "") {
+        file_list.add("--attest.name")
+        file_list.add(attest_name)
+    }
+    if (attest_default != "") {
+        file_list.add("--attest.default")
+        file_list.add(attest_default)
+    }
+    if (collect_regex != "") {
+        file_list.add("--collect-regex")
+        file_list.add(collect_regex)
+    }    
+
+    if (scribe_enable) {
+        file_list.add("-E")
+    }
+
+    if (scribe_url != "") {
+        file_list.add("--scribe.url")
+        file_list.add(scribe_url)
+    }    
+    if (scribe_loginurl != "") {
+        file_list.add("--scribe.loginurl")
+        file_list.add(scribe_loginurl)
+    }
+    if (scribe_audience != "") {
+        file_list.add("--scribe.auth0.audience")
+        file_list.add(scribe_audience)
+    }  
+    if (context_dir != "") {
+        file_list.add("--context_dir")
+        file_list.add(context_dir)
+    }    
+
+    file_list.add("--context.type")
+    file_list.add("jenkins")
+   
     echo "Params  - $file_list"
 }
