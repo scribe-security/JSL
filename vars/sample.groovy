@@ -61,5 +61,4 @@ def call(String target,
 
 ) {
     echo "Bom  - $target"
-    Sample(target)
 }
