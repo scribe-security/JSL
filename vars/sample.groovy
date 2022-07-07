@@ -132,6 +132,18 @@ def ReadDiff(String name) {
 //     echo "Bom  - $target"
 // }
 
-def call(String target, String verbose, Boolean publish_enable = true) {
-    echo "Sampling  target: $name, verbose: $verbose, publish result: $publish_enable"
+def call(String name, Boolean install_enable = true, Boolean publish_enable = true) {
+    echo "Sampling  Sample name: $name, dependency install: $install_enable, publish result: $publish_enable"
+    writeFile file:'collect_scribe_info.sh', text:libraryResource("collect_scribe_info.sh")
+
+    if (install_enable == true) {
+        echo "Trying to install script depends"
+        DEPEND_INSTALL = sh(script: libraryResource("depend_install.sh"),returnStdout: true)
+        echo "DEPEND_INSTALL: ${DEPEND_INSTALL}"
+    }
+
+    Sample(name)
+    if (publish_enable == true) {
+        PublishSample(name)
+    }
 }
