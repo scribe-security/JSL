@@ -39,7 +39,7 @@ def PublishReport(String name="scribe", String directory="scribe") {
 }
 
 def call(String target,
-        String verbose = "",
+        Integer verbose = 2,
         String config = "",
         String format = "",
         String output_directory = "",
@@ -60,5 +60,16 @@ def call(String target,
         String context_dir = ""
 
 ) {
+    def file_list = []
     echo "Bom  - $target"
+
+    if (config != "") {
+        file_list.add("--config")
+        file_list.add(config)
+    }
+    if (format != "") {
+        file_list.add("--format")
+        file_list.add(format)
+    }
+    echo "Params  - $file_list"
 }
