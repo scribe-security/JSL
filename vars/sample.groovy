@@ -132,8 +132,8 @@ def ReadDiff(String name) {
 //     echo "Bom  - $target"
 // }
 
-def call(String name, Boolean install_enable = true, Boolean publish_enable = true) {
-    echo "Sampling  Sample name: $name, dependency install: $install_enable, publish result: $publish_enable"
+def call(String target, Boolean install_enable = true, Boolean publish_enable = true) {
+    echo "Sampling  Sample name: $target, dependency install: $install_enable, publish result: $publish_enable"
     writeFile file:'collect_scribe_info.sh', text:libraryResource("collect_scribe_info.sh")
 
     if (install_enable == true) {
@@ -142,8 +142,8 @@ def call(String name, Boolean install_enable = true, Boolean publish_enable = tr
         echo "DEPEND_INSTALL: ${DEPEND_INSTALL}"
     }
 
-    Sample(name)
+    Sample(target)
     if (publish_enable == true) {
-        PublishSample(name)
+        PublishSample(target)
     }
 }
