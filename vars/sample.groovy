@@ -133,17 +133,17 @@ def ReadDiff(String name) {
 // }
 
 def call(String target, Boolean install_enable = true, Boolean publish_enable = true) {
-    echo "Sampling  Sample name: $target, dependency install: $install_enable, publish result: $publish_enable"
-    writeFile file:'collect_scribe_info.sh', text:libraryResource("collect_scribe_info.sh")
+    echo "Sampling  target: $target, dependency install: $install_enable, publish result: $publish_enable"
+    // writeFile file:'collect_scribe_info.sh', text:libraryResource("collect_scribe_info.sh")
 
-    if (install_enable == true) {
-        echo "Trying to install script depends"
-        DEPEND_INSTALL = sh(script: libraryResource("depend_install.sh"),returnStdout: true)
-        echo "DEPEND_INSTALL: ${DEPEND_INSTALL}"
-    }
+    // if (install_enable == true) {
+    //     echo "Trying to install script depends"
+    //     DEPEND_INSTALL = sh(script: libraryResource("depend_install.sh"),returnStdout: true)
+    //     echo "DEPEND_INSTALL: ${DEPEND_INSTALL}"
+    // }
 
     Sample(target)
-    if (publish_enable == true) {
-        PublishSample(target)
-    }
+    // if (publish_enable == true) {
+    //     PublishSample(target)
+    // }
 }
