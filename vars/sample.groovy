@@ -131,28 +131,27 @@ def ReadDiff(String name) {
 //   String context_dir) {
 //     echo "Bom  - $target"
 // }
+//   String verbose,
+//   String config,
+//   String format,
+//   String output_directory,
+//   String output_file,
+//   String name,
+//   String[] env,
+//   String[] label,
+//   String filter_regex,
+//   String collect_regex,
+//   Boolean force,
+//   String attest_config,
+//   String attest_name,
+//   String attest_default,
+//   Boolean scribe_enable,
+//   String scribe_url,
+//   String scribe_loginurl,
+//   String scribe_audience,
+//   String context_dir
 
-
-def call(String target,
-  String verbose,
-  String config,
-  String format,
-  String output_directory,
-  String output_file,
-  String name,
-  String[] env,
-  String[] label,
-  String filter_regex,
-  String collect_regex,
-  Boolean force,
-  String attest_config,
-  String attest_name,
-  String attest_default,
-  Boolean scribe_enable,
-  String scribe_url,
-  String scribe_loginurl,
-  String scribe_audience,
-  String context_dir) {
+def call(String target) {
     echo "Bom  - $target"
     Sample(target)
 }
