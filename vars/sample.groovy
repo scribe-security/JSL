@@ -151,7 +151,9 @@ def ReadDiff(String name) {
 //   String scribe_audience,
 //   String context_dir
 
-def call(String target) {
+def call(String target,
+         String verbose="",
+) {
     echo "Bom  - $target"
     Sample(target)
 }
