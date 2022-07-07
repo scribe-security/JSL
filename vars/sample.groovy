@@ -98,7 +98,7 @@ def Diff(String name) {
     echo "Diff: ${DIFF}"
 }
 
-def Sample(String name) {
+def Sample(String name, String ) {
     ALL = sh(script: """bash collect_scribe_info.sh all ${name}""",returnStdout: true)
     echo "ALL: ${ALL}"
 }
@@ -132,7 +132,7 @@ def ReadDiff(String name) {
 //     echo "Bom  - $target"
 // }
 
-def call(String target, String install_enable, Boolean publish_enable = true) {
+def call(String target, Integer install_enable, Boolean publish_enable = true) {
     echo "Sampling  target: $target, dependency install: $install_enable, publish result: $publish_enable"
     // writeFile file:'collect_scribe_info.sh', text:libraryResource("collect_scribe_info.sh")
 
