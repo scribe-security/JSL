@@ -98,7 +98,7 @@ def Diff(String name) {
     echo "Diff: ${DIFF}"
 }
 
-def Sample(String name, String ) {
+def Sample(String name) {
     ALL = sh(script: """bash collect_scribe_info.sh all ${name}""",returnStdout: true)
     echo "ALL: ${ALL}"
 }
