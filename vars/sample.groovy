@@ -136,8 +136,9 @@ def call(String target,
     if (context_dir != "") {
         file_list.add("--context_dir")
         file_list.add(context_dir)
-    }    
-
+    }
+    
+    file_list.add(target)
     file_list.add("--context.type")
     file_list.add("jenkins")
    
