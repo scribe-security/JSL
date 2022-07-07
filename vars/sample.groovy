@@ -63,7 +63,10 @@ def call(String target,
     def file_list = []
     echo "Bom  - $target"
         // Integer verbose = 2,
-
+    file_list.add(target)
+    file_list.add("--verbose")
+    file_list.add(verbose.toString())
+    
     if (config != "") {
         file_list.add("--config")
         file_list.add(config)
@@ -137,8 +140,7 @@ def call(String target,
         file_list.add("--context_dir")
         file_list.add(context_dir)
     }
-    
-    file_list.add(target)
+
     file_list.add("--context.type")
     file_list.add("jenkins")
    
