@@ -47,16 +47,14 @@ def call(Map conf) {
 
     command.add(conf.target)
     command.add(sprintf("--verbose=%d", conf.verbose))
-    // command.add(conf.verbose.toString())
     
     if (conf.config != null ) {
-        command.add("--config="+conf.config)
-        command.add(conf.config)
+        command.add(sprintf("--config=%s", conf.config))
+
     }
 
     if (conf.format != null) {
-        command.add("--format")
-        command.add(conf.format)
+        command.add(sprintf("--format=%s", conf.format))
     }
 
     command.add("--output-directory")
@@ -67,32 +65,26 @@ def call(Map conf) {
     }
 
     if (conf.output_file != null) {
-        command.add("--output-file")
-        command.add(conf.output_file)
+        command.add(sprintf("--output_file=%s", conf.output_file))
     }
     if (conf.name != null) {
-        command.add("--name")
-        command.add(conf.name)
+        command.add(sprintf("--name=%s", conf.name))  
     }
 
     if (conf.env != null) {
-        command.add("--env")
-        command.add(conf.env.join(','))
+        command.add(sprintf("--env=%s", conf.env.join(',')))
     }
 
     if (conf.label != null) {
-        command.add("--label")
-        command.add(conf.label.join(','))
+        command.add(sprintf("--label=%s", conf.label.join(',')))
     }
 
     if (conf.filter_regex != null) {
-        command.add("--filter-regex")
-        command.add(conf.filter_regex)
+        command.add(sprintf("--filter-regex=%s", conf.filter_regex))
     }
 
     if (conf.collect_regex != null) {
-        command.add("--collect-regex")
-        command.add(conf.collect_regex)
+        command.add(sprintf("--collect-regex=%s", conf.collect_regex))
     }
 
     if (conf.force == true ) {
@@ -100,20 +92,18 @@ def call(Map conf) {
     }
 
     if (conf.attest_config != null) {
-        command.add("--attest.config")
-        command.add(conf.attest_config)
+        command.add(sprintf("--attest.config=%s", conf.attest_config))
     }
+
     if (conf.attest_name != null ) {
-        command.add("--attest.name")
-        command.add(conf.attest_name)
+        command.add(sprintf("--attest.name=%s", conf.attest_name))
     }
+
     if (conf.attest_default != null ) {
-        command.add("--attest.default")
-        command.add(conf.attest_default)
+        command.add(sprintf("--attest.default=%s", conf.attest_default))
     }
     if (conf.collect_regex != null ) {
-        command.add("--collect-regex")
-        command.add(conf.collect_regex)
+        command.add(sprintf("--collect-regex=%s", conf.collect_regex))
     }    
 
     if (conf.scribe_enable == true) {
@@ -121,33 +111,27 @@ def call(Map conf) {
     }
 
     if (conf.scribe_url != null) {
-        command.add("--scribe.url")
-        command.add(conf.scribe_url)
+        command.add(sprintf("--scribe.url=%s", conf.scribe_url))
     }
 
     if (conf.scribe_clientid != null) {
-        command.add("--scribe.clientid")
-        command.add(conf.scribe_clientid)
+        command.add(sprintf("--scribe.clientid=%s", conf.scribe_clientid))
     } 
 
     if (conf.scribe_clientsecret != null) {
-        command.add("--scribe.clientsecret")
-        command.add(conf.scribe_clientsecret)
+        command.add(sprintf("--scribe.clientsecret=%s", conf.scribe_clientsecret))
     }    
 
     if (conf.scribe_loginurl != null ) {
-        command.add("--scribe.loginurl")
-        command.add(conf.scribe_loginurl)
+        command.add(sprintf("--scribe.loginurl=%s", conf.scribe_loginurl))
     }
 
     if (conf.scribe_audience != null ) {
-        command.add("--scribe.auth0.audience")
-        command.add(conf.scribe_audience)
+        command.add(sprintf("--scribe.auth0.audience=%s", conf.scribe_audience))
     }  
 
     if (conf.context_dir != null ) {
-        command.add("--context_dir")
-        command.add(conf.context_dir)
+        command.add(sprintf("--context_dir=%s", conf.context_dir))
     }
 
     command.add("--context-type")
