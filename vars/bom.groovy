@@ -98,7 +98,6 @@ def call(Map conf) {
     command.add("jenkins")
    
     def commandStr = command.join(' ')
-    echo "Command  - $command"
     def out_data = sh(script: "${commandStr}",returnStdout: true)
     println out_data
 }
