@@ -142,7 +142,7 @@ def call(String target,
         command.add(context_dir)
     }
 
-    command.add("--context.type")
+    command.add("--context-type")
     command.add("jenkins")
    
     def commandStr = command.join(' ')
