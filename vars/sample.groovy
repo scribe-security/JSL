@@ -63,6 +63,8 @@ def call(String target,
     def command = []
     
     command.add("bomber")
+    command.add("bom")
+
     command.add(target)
     command.add("--verbose")
     command.add(verbose.toString())
