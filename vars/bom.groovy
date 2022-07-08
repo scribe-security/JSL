@@ -33,7 +33,6 @@ def PublishReport(String name="scribe", String directory="scribe") {
 }
 
 def call(Map conf) {
-    println conf
     def command = []
     
     command.add("bomber")

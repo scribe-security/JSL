@@ -3,7 +3,6 @@ import java.nio.file.Path
 import java.nio.file.Paths
 
 def call(Map conf) {
-    println conf
     def command = []
     
     command.add("bomber")
