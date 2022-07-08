@@ -114,7 +114,18 @@ def call(Map conf) {
     if (conf.scribe_url != null) {
         command.add("--scribe.url")
         command.add(conf.scribe_url)
+    }
+
+    if (conf.scribe_clientid != null) {
+        command.add("--scribe.clientid")
+        command.add(conf.scribe_clientid)
+    } 
+
+    if (conf.scribe_clientsecret != null) {
+        command.add("--scribe.clientsecret")
+        command.add(conf.scribe_clientsecret)
     }    
+
     if (conf.scribe_loginurl != null ) {
         command.add("--scribe.loginurl")
         command.add(conf.scribe_loginurl)
