@@ -60,89 +60,90 @@ def call(String target,
         String context_dir = ""
 
 ) {
-    def file_list = []
-    echo "Bom  - $target"
-        // Integer verbose = 2,
-    file_list.add(target)
-    file_list.add("--verbose")
-    file_list.add(verbose.toString())
+    def command = []
+    
+    command.add("bomber")
+    command.add(target)
+    command.add("--verbose")
+    command.add(verbose.toString())
     
     if (config != "") {
-        file_list.add("--config")
-        file_list.add(config)
+        command.add("--config")
+        command.add(config)
     }
+
     if (format != "") {
-        file_list.add("--format")
-        file_list.add(format)
+        command.add("--format")
+        command.add(format)
     }
     if (output_directory != "") {
-        file_list.add("--output-directory")
-        file_list.add(output_directory)
+        command.add("--output-directory")
+        command.add(output_directory)
     }
     if (output_file != "") {
-        file_list.add("--output-file")
-        file_list.add(output_file)
+        command.add("--output-file")
+        command.add(output_file)
     }
     if (name != "") {
-        file_list.add("--name")
-        file_list.add(name)
+        command.add("--name")
+        command.add(name)
     }
         //     String[] env = [],
         // String[] label  = [],
 
     if (filter_regex != "") {
-        file_list.add("--filter-regex")
-        file_list.add(filter_regex)
+        command.add("--filter-regex")
+        command.add(filter_regex)
     }
     if (collect_regex != "") {
-        file_list.add("--collect-regex")
-        file_list.add(collect_regex)
+        command.add("--collect-regex")
+        command.add(collect_regex)
     }
 
     if (force) {
-        file_list.add("-f")
+        command.add("-f")
     }
 
     if (attest_config != "") {
-        file_list.add("--attest.config")
-        file_list.add(attest_config)
+        command.add("--attest.config")
+        command.add(attest_config)
     }
     if (attest_name != "") {
-        file_list.add("--attest.name")
-        file_list.add(attest_name)
+        command.add("--attest.name")
+        command.add(attest_name)
     }
     if (attest_default != "") {
-        file_list.add("--attest.default")
-        file_list.add(attest_default)
+        command.add("--attest.default")
+        command.add(attest_default)
     }
     if (collect_regex != "") {
-        file_list.add("--collect-regex")
-        file_list.add(collect_regex)
+        command.add("--collect-regex")
+        command.add(collect_regex)
     }    
 
     if (scribe_enable) {
-        file_list.add("-E")
+        command.add("-E")
     }
 
     if (scribe_url != "") {
-        file_list.add("--scribe.url")
-        file_list.add(scribe_url)
+        command.add("--scribe.url")
+        command.add(scribe_url)
     }    
     if (scribe_loginurl != "") {
-        file_list.add("--scribe.loginurl")
-        file_list.add(scribe_loginurl)
+        command.add("--scribe.loginurl")
+        command.add(scribe_loginurl)
     }
     if (scribe_audience != "") {
-        file_list.add("--scribe.auth0.audience")
-        file_list.add(scribe_audience)
+        command.add("--scribe.auth0.audience")
+        command.add(scribe_audience)
     }  
     if (context_dir != "") {
-        file_list.add("--context_dir")
-        file_list.add(context_dir)
+        command.add("--context_dir")
+        command.add(context_dir)
     }
 
-    file_list.add("--context.type")
-    file_list.add("jenkins")
+    command.add("--context.type")
+    command.add("jenkins")
    
-    echo "Params  - $file_list"
+    echo "Command  - $command"
 }
