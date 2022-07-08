@@ -46,7 +46,7 @@ def call(Map conf) {
     command.add("bom")
 
     command.add(conf.target)
-    command.add(sprintf("--verbose=%d", conf.verbose)
+    command.add(sprintf("--verbose=%d", conf.verbose))
     // command.add(conf.verbose.toString())
     
     if (conf.config != null ) {
