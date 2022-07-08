@@ -1,12 +1,6 @@
 #!groovy
-import groovy.transform.SourceURI
 import java.nio.file.Path
 import java.nio.file.Paths
-
-class ScriptSourceUri {
-    @SourceURI
-    static URI uri
-}
 
 def FindFiles(String directory, String ext="json") {
     def files
@@ -102,9 +96,6 @@ def call(Map conf) {
     if (conf.attest_default != null ) {
         command.add(sprintf("--attest.default=%s", conf.attest_default))
     }
-    if (conf.collect_regex != null ) {
-        command.add(sprintf("--collect-regex=%s", conf.collect_regex))
-    }    
 
     if (conf.scribe_enable == true) {
         command.add("-E")
