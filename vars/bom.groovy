@@ -46,12 +46,12 @@ def call(Map conf) {
     command.add("bom")
 
     command.add(conf.target)
-    command.add("--verbose")
-    command.add(conf.verbose.toString())
+    command.add("--verbose=" + conf.verbose.ToString())
+    // command.add(conf.verbose.toString())
     
     if (conf.config != null ) {
-        command.add("--config")
-        command.add(conf.config)
+        command.add("--config="+conf.config)
+        // command.add(conf.config)
     }
 
     if (conf.format != null) {
