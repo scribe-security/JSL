@@ -47,7 +47,7 @@ def call(Map conf) {
     }
 
     if (conf.scribe_audience != null ) {
-        command.add(sprintf("--scribe.auth0.audience=%s", conf.scribe_audience))
+        command.add(sprintf("--scribe.auth.audience=%s", conf.scribe_audience))
     }
 
     if (conf.context_dir != null ) {
