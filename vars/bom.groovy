@@ -74,13 +74,22 @@ def call(Map conf) {
         command.add("--name")
         command.add(conf.name)
     }
-        //     String[] env = [],
-        // String[] label  = [],
+
+    if (conf.env != null) {
+        command.add("--env")
+        command.add(conf.env.join(','))
+    }
+
+    if (conf.label != null) {
+        command.add("--label")
+        command.add(conf.label.join(','))
+    }
 
     if (conf.filter_regex != null) {
         command.add("--filter-regex")
         command.add(conf.filter_regex)
     }
+
     if (conf.collect_regex != null) {
         command.add("--collect-regex")
         command.add(conf.collect_regex)
@@ -130,10 +139,12 @@ def call(Map conf) {
         command.add("--scribe.loginurl")
         command.add(conf.scribe_loginurl)
     }
+
     if (conf.scribe_audience != null ) {
         command.add("--scribe.auth0.audience")
         command.add(conf.scribe_audience)
     }  
+
     if (conf.context_dir != null ) {
         command.add("--context_dir")
         command.add(conf.context_dir)
