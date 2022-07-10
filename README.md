@@ -22,7 +22,19 @@ library identifier: 'JSL@master', retriever: modernSCM(
       remote       : 'https://github.com/scribe-security/JSL.git'])
 ```
 ## Global Shared Libraries
+(See Jenkins documentation)[https://www.jenkins.io/doc/book/pipeline/shared-libraries/]
+Global Shared Libraries section.
 
+![Scribe global JSL](./imgs/jsl_install.png?raw=true "Install scribe JSL")
+
+
+### Using global libraries
+(See Jenkins documentation)[(Jenkins documentation)[https://www.jenkins.io/doc/book/pipeline/shared-libraries/]]
+
+Add directive with selected name.
+```
+@Library('scribe-jsl') _
+```
 
 # API
 ## Gensbom - bom
@@ -198,6 +210,9 @@ Select Manage Jenkins -> Manage Plugins-> Available
 Search for required plugin, install plugins and restart jenkins
 * html-publisher - allows library to publish result.
 * pipeline-utility-steps - allow library to find result.
+
+![Install plugins](./imgs/plugin_install.png?raw=true "Install plugins")
+
 
 ### Usage
 ```YAML
