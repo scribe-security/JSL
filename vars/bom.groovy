@@ -6,7 +6,6 @@ def call(Map conf) {
     def command = []
     
     command.add("gensbom")
-    command.add("bom")
 
     command.add(conf.target)
     command.add(sprintf("--verbose=%d", conf.verbose))
@@ -30,8 +29,8 @@ def call(Map conf) {
     if (conf.output_file != null) {
         command.add(sprintf("--output_file=%s", conf.output_file))
     }
-    if (conf.name != null) {
-        command.add(sprintf("--name=%s", conf.name))  
+    if (conf.product-key != null) {
+        command.add(sprintf("--product-key=%s", conf.product-key))  
     }
 
     if (conf.env != null) {
