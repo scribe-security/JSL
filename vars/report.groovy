@@ -34,16 +34,16 @@ def call(Map conf) {
         command.add(sprintf("--scribe.url=%s", conf.scribe_url))
     }
 
-    if (conf.scribe_clientid != null) {
-        command.add(sprintf("--scribe.clientid=%s", conf.scribe_clientid))
+    if (conf.scribe_client_id != null) {
+        command.add(sprintf("--scribe.client-id=%s", conf.scribe_client_id))
     } 
 
-    if (conf.scribe_clientsecret != null) {
-        command.add(sprintf("--scribe.clientsecret=%s", conf.scribe_clientsecret))
+    if (conf.scribe_client_secret != null) {
+        command.add(sprintf("--scribe.client-secret=%s", conf.scribe_client_secret))
     }    
 
-    if (conf.scribe_loginurl != null ) {
-        command.add(sprintf("--scribe.loginurl=%s", conf.scribe_loginurl))
+    if (conf.scribe_login_url != null ) {
+        command.add(sprintf("--scribe.login-url=%s", conf.scribe_login_url))
     }
 
     if (conf.scribe_audience != null ) {

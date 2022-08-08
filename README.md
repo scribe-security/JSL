@@ -95,9 +95,9 @@ def bom(Map conf)
   scribe-enable:
     description: 'Enable scribe client'
     default: false
-  scribe-clientid:
+  scribe-client-id:
     description: 'Scribe client id' 
-  scribe-clientsecret:
+  scribe-client-secret:
     description: 'Scribe access token' 
   scribe-url:
     description: 'Scribe url' 
@@ -161,8 +161,8 @@ def report(Map conf)
  report(target: "busybox:latest", 
       verbose: 2,
        scribe-enable: true,
-      scribe-clientid: ${{ inputs.clientid }}
-      scribe-clientsecret: ${{ inputs.clientsecret }}
+      scribe-client-id: ${{ inputs.client-id }}
+      scribe-client-secret: ${{ inputs.client-secret }}
       )
 ```
 
@@ -181,13 +181,13 @@ def report(Map conf)
   scribe-enable:
     description: 'Enable scribe client'
     default: false
-  scribe-clientid:
+  scribe-client-id:
     description: 'Scribe client id' 
-  scribe-clientsecret:
+  scribe-client-secret:
     description: 'Scribe access token' 
   scribe-url:
     description: 'Scribe url' 
-  scribe-loginurl:
+  scribe-login-url:
     description: 'Scribe auth login url' 
   scribe-audience:
     description: 'Scribe auth audience' 
@@ -252,8 +252,8 @@ pipeline {
             bom(target: "dir:mongo-express-scm", 
                    verbose: 3,
                    scribe_enable: true,
-                   scribe_clientid: "$SCRIBE_CLIENT_ID",
-                   scribe_clientsecret: "$SCRIBE_CLIENT_SECRET",
+                   scribe_client_id: "$SCRIBE_CLIENT_ID",
+                   scribe_client_secret: "$SCRIBE_CLIENT_SECRET",
                    )
           }
         }
@@ -269,8 +269,8 @@ pipeline {
             bom(target: "mongo-express:1.0.0-alpha.4", 
                 verbose: 3,
                 scribe_enable: true,
-                scribe_clientid: "$SCRIBE_CLIENT_ID",
-                scribe_clientsecret: "$SCRIBE_CLIENT_SECRET",
+                scribe_client_id: "$SCRIBE_CLIENT_ID",
+                scribe_client_secret: "$SCRIBE_CLIENT_SECRET",
                 )
           }
         }
@@ -284,8 +284,8 @@ pipeline {
             report(
                 verbose: 3,
                 scribe_enable: true,
-                scribe_clientid: "$SCRIBE_CLIENT_ID",
-                scribe_clientsecret: "$SCRIBE_CLIENT_SECRET",
+                scribe_client_id: "$SCRIBE_CLIENT_ID",
+                scribe_client_secret: "$SCRIBE_CLIENT_SECRET",
             )
           }
           publish()            
