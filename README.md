@@ -66,42 +66,42 @@ def bom(Map conf)
   format:
     description: 'Sbom formatter, options=[cyclonedx-json cyclonedx-xml attest-cyclonedx-json statement-cyclonedx-json]'
     default: cyclonedxjson
-  output-directory:
+  output_directory:
     description: 'Report output directory'
     default: ./scribe/gensbom
-  output-file:
+  output_file:
     description: 'Output result to file'
-  product-key:
+  product_key:
     description: 'Custom/project product-key'
   label:
     description: 'Custom label'
   env:
     description: 'Custom env'
-  filter-regex:
+  filter_regex:
     description: 'Filter out files by regex'
     default: .*\.pyc,\.git/.*
-  collect-regex:
+  collect_regex:
     description: 'Collect files content by regex'
   force:
     description: 'Force overwrite cache'
     default: false
-  attest-config:
+  attest_config:
     description: 'Attestation config map'
-  attest-name:
+  attest_name:
     description: 'Attestation config name (default "gensbom")'
-  attest-default:
+  attest_default:
     description: 'Attestation default config, options=[sigstore sigstore-github x509]'
     default: sigstore-github
-  scribe-enable:
+  scribe_enable:
     description: 'Enable scribe client'
     default: false
-  scribe-client-id:
+  scribe_client_id:
     description: 'Scribe client id' 
-  scribe-client-secret:
+  scribe_client_secret:
     description: 'Scribe access token' 
-  scribe-url:
+  scribe_url:
     description: 'Scribe url' 
-  context-dir:
+  context_dir:
     description: 'Context dir' 
 ```
 
@@ -134,19 +134,19 @@ def verify(Map conf)
   inputformat:
     description: 'Sbom input formatter, options=[attest-cyclonedx-json] (default "attest-cyclonedx-json")'
     default: attest-cyclonedx-json
-  output-directory:
+  output_directory:
     description: 'report output directory'
     default: ./scribe/gensbom
-  output-file:
+  output_file:
     description: 'Output result to file'
-  filter-regex:
+  filter_regex:
     description: 'Filter out files by regex'
     default: .*\.pyc,\.git/.*
-  attest-config:
+  attest_config:
     description: 'Attestation config map'
-  attest-name:
+  attest_name:
     description: 'Attestation config name (default "gensbom")'
-  attest-default:
+  attest_default:
     description: 'Attestation default config, options=[sigstore sigstore-github x509]'
 ```
 
@@ -160,9 +160,9 @@ def report(Map conf)
 ```YAML
  report(target: "busybox:latest", 
       verbose: 2,
-       scribe-enable: true,
-      scribe-client-id: ${{ inputs.client-id }}
-      scribe-client-secret: ${{ inputs.client-secret }}
+       scribe_enable: true,
+      scribe_client_id: ${{ inputs.client-id }}
+      scribe_client_secret: ${{ inputs.client-secret }}
       )
 ```
 
@@ -173,25 +173,25 @@ def report(Map conf)
     default: 0
   config:
     description: 'Application config file'
-  output-directory:
+  output_directory:
     description: 'Output directory path'
     default: ./scribe/valint
-  output-file:
+  output_file:
     description: 'Output file path'
-  scribe-enable:
+  scribe_enable:
     description: 'Enable scribe client'
     default: false
-  scribe-client-id:
+  scribe_client_id:
     description: 'Scribe client id' 
-  scribe-client-secret:
+  scribe_client_secret:
     description: 'Scribe access token' 
-  scribe-url:
+  scribe_url:
     description: 'Scribe url' 
-  scribe-login-url:
+  scribe_login_url:
     description: 'Scribe auth login url' 
-  scribe-audience:
+  scribe_audience:
     description: 'Scribe auth audience' 
-  context-dir:
+  context_dir:
     description: 'Context dir' 
   section:
     description: 'Select report sections'
