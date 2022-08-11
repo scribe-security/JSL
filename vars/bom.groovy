@@ -4,9 +4,8 @@ import java.nio.file.Paths
 
 def call(Map conf) {
     def command = []
-    
-    command.add("gensbom")
 
+    command.add("gensbom")
     command.add(conf.target)
     command.add(sprintf("--verbose=%d", conf.verbose))
     
@@ -97,6 +96,7 @@ def call(Map conf) {
     command.add("jenkins")
    
     def commandStr = command.join(' ')
+    println "${commandStr}"
     def out_data = sh(script: "${commandStr}",returnStdout: true)
     println out_data
 }
