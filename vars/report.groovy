@@ -23,7 +23,7 @@ def call(Map conf) {
     }
 
     if (conf.output_file != null) {
-        command.add(sprintf("--output_file=%s", conf.output_file))
+        command.add(sprintf("--output-file=%s", conf.output_file))
     }
 
     if (conf.scribe_enable == true) {
@@ -51,7 +51,7 @@ def call(Map conf) {
     }
 
     if (conf.context_dir != null ) {
-        command.add(sprintf("--context_dir=%s", conf.context_dir))
+        command.add(sprintf("--context-dir=%s", conf.context_dir))
     }
 
     if (conf.section != null) {

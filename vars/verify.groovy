@@ -52,7 +52,7 @@ def call(Map conf) {
     }
 
     if (conf.context_dir != null ) {
-        command.add(sprintf("--context_dir=%s", conf.context_dir))
+        command.add(sprintf("--context-dir=%s", conf.context_dir))
     }
 
     command.add("--context-type")
