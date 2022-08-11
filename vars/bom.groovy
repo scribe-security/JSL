@@ -27,7 +27,7 @@ def call(Map conf) {
     }
 
     if (conf.output_file != null) {
-        command.add(sprintf("--output_file=%s", conf.output_file))
+        command.add(sprintf("--output-file=%s", conf.output_file))
     }
     if (conf.product-key != null) {
         command.add(sprintf("--product-key=%s", conf.product-key))  
@@ -86,11 +86,11 @@ def call(Map conf) {
     }
 
     if (conf.scribe_audience != null ) {
-        command.add(sprintf("--scribe.auth0.audience=%s", conf.scribe_audience))
+        command.add(sprintf("--scribe.auth.audience=%s", conf.scribe_audience))
     }  
 
     if (conf.context_dir != null ) {
-        command.add(sprintf("--context_dir=%s", conf.context_dir))
+        command.add(sprintf("--context-dir=%s", conf.context_dir))
     }
 
     command.add("--context-type")
