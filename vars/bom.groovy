@@ -12,36 +12,36 @@ def call(Map conf) {
         command.add(sprintf("--verbose=%d", conf.verbose))
     }
 
-    if (conf.config != null) {
-        command.add(sprintf("--config=%s", conf.config))
+    // if (conf.config != null) {
+    //     command.add(sprintf("--config=%s", conf.config))
 
-    }
+    // }
 
-    if (conf.format != null) {
-        command.add(sprintf("--format=%s", conf.format))
-    }
+    // if (conf.format != null) {
+    //     command.add(sprintf("--format=%s", conf.format))
+    // }
 
-    command.add("--output-directory")
-    if (conf.output_directory != null) {
-        command.add(conf.output_directory)
-    } else {
-        command.add("scribe/gensbom")
-    }
+    // command.add("--output-directory")
+    // if (conf.output_directory != null) {
+    //     command.add(conf.output_directory)
+    // } else {
+    //     command.add("scribe/gensbom")
+    // }
 
-    if (conf.output_file != null) {
-        command.add(sprintf("--output-file=%s", conf.output_file))
-    }
-    if (conf.product-key != null) {
-        command.add(sprintf("--product-key=%s", conf.product-key))  
-    }
+    // if (conf.output_file != null) {
+    //     command.add(sprintf("--output-file=%s", conf.output_file))
+    // }
+    // if (conf.product-key != null) {
+    //     command.add(sprintf("--product-key=%s", conf.product-key))  
+    // }
 
-    if (conf.env != null) {
-        command.add(sprintf("--env=%s", conf.env.join(',')))
-    }
+    // if (conf.env != null) {
+    //     command.add(sprintf("--env=%s", conf.env.join(',')))
+    // }
 
-    if (conf.label != null) {
-        command.add(sprintf("--label=%s", conf.label.join(',')))
-    }
+    // if (conf.label != null) {
+    //     command.add(sprintf("--label=%s", conf.label.join(',')))
+    // }
 
     // if (conf.filter_regex != null) {
     //     command.add(sprintf("--filter-regex=%s", conf.filter_regex))
