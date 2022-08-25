@@ -9,8 +9,10 @@ def call(Map conf) {
     command.add("verify")
 
     command.add(conf.target)
-    command.add(sprintf("--verbose=%d", conf.verbose))
-    
+    if conf.verbose != null {
+        command.add(sprintf("--verbose=%d", conf.verbose))
+    }
+
     if (conf.config != null ) {
         command.add(sprintf("--config=%s", conf.config))
 
