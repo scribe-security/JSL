@@ -5,7 +5,7 @@ date: June 30, 2022
 geometry: margin=2cm
 ---
 # Scribe Jenkins shared library
-Scribe offers Jenkins shared library for embedding evidence collecting and integrity verification to your pipeline. \
+Scribe offers Jenkins a shared library for embedding evidence collecting and integrity verification to your pipeline. \
 Library wraps scribe provided CLI tools.
 * Gensbom - gitHub Action for SBOM Generation (Scribe) 
 * Valint - validate supply chain integrity tool
@@ -31,7 +31,7 @@ Global Shared Libraries section.
 ### Using global libraries
 (See Jenkins documentation)[(Jenkins documentation)[https://www.jenkins.io/doc/book/pipeline/shared-libraries/]]
 
-Add directive with selected name.
+Add directive with the selected name.
 ```
 @Library('scribe-jsl') _
 ```
@@ -106,7 +106,7 @@ def bom(Map conf)
 ```
 
 ## Gensbom - verify
-Function invokes a containerized `gensbom` sub command `verify` based on the CLI.
+The function invokes a containerized `gensbom` sub command `verify` based on the CLI.
 ```
 def verify(Map conf)
 ```
@@ -200,16 +200,16 @@ def report(Map conf)
 ```
 
 ## Publish report
-Function allows you to publish the evidence and report to your Jenkins job.
+The function allows you to publish the evidence and report to your Jenkins job.
 ```
 def publish(String name="scribe", String directory="scribe") {
 ```
 
 ### API plugin dependencies
 Select Manage Jenkins -> Manage Plugins-> Available
-Search for required plugin, install plugins and restart jenkins
-* html-publisher - allows library to publish result.
-* pipeline-utility-steps - allow library to find result.
+Search for the required plugin, install plugins and restart Jenkins
+* html-publisher - allows the library to publish results.
+* pipeline-utility-steps - allow the library to find results.
 
 ![Install plugins](./imgs/plugin_install.png?raw=true "Install plugins")
 
@@ -222,18 +222,22 @@ publish()
 # Integrations
 
 ## Scribe service integration
-Scribe provides a set of services to store,verify and manage the supply chain integrity. \
+Scribe provides a set of services to store, verify and manage the supply chain integrity. \
 Following are some integration examples.
 Scribe integrity flow - upload evidence using `gensbom` and download the integrity report using `valint`. \
 You may collect evidence anywhere in your workflows. 
 
 <details>
-  <summary>  Scribe integrity report - full pipeline </summary>
+  <summary>  Scribe integrity report - full pipeline (k8s) </summary>
 
-Full workflow example of a workflow, upload evidence using gensbom and download report using valint.
-Finally attaching reports and evidence to your pipeline run.
+Full workflow example of a workflow, upload evidence using Gensbom and download report using Valint.
+Finally, attach reports and evidence to your pipeline run.
 
 ```YAML
+library identifier: 'JSL@master', retriever: modernSCM(
+     [$class       : 'GitSCMSource',
+      remote       : 'https://github.com/scribe-security/JSL.git'])
+
 pipeline {
   agent {
     kubernetes {
@@ -250,11 +254,11 @@ pipeline {
         container('gensbom') {
           withCredentials([usernamePassword(credentialsId: 'scribe-staging-auth-id', usernameVariable: 'SCRIBE_CLIENT_ID', passwordVariable: 'SCRIBE_CLIENT_SECRET')]) {
             bom(target: "dir:mongo-express-scm", 
-                   verbose: 3,
-                   scribe_enable: true,
-                   scribe_client_id: "$SCRIBE_CLIENT_ID",
-                   scribe_client_secret: "$SCRIBE_CLIENT_SECRET",
-                   )
+                verbose: 3,
+                scribe_enable: true,
+                scribe_client_id: "$SCRIBE_CLIENT_ID",
+                scribe_client_secret: "$SCRIBE_CLIENT_SECRET",
+                )
           }
         }
       }
@@ -325,11 +329,117 @@ spec:
 ```
 </details>
 
+<details>
+  <summary>  Scribe integrity report - full pipeline (docker) </summary>
+
+Full workflow example of a workflow, upload evidence using Gensbom and download report using Valint.
+Finally, attach reports and evidence to your pipeline run.
+
+```javascript
+library identifier: 'JSL@master', retriever: modernSCM(
+     [$class       : 'GitSCMSource',
+      remote       : 'https://github.com/scribe-security/JSL.git'])
+
+pipeline {
+  agent any
+  stages {
+    stage('checkout') {
+      steps {
+          cleanWs()
+          sh 'git clone -b v1.0.0-alpha.4 --single-branch https://github.com/mongo-express/mongo-express.git mongo-express-scm'
+      }
+    }
+
+    stage('sbom') {
+        agent {
+            docker {
+                image 'scribesecuriy.jfrog.io/scribe-docker-public-local/gensbom:latest'
+                reuseNode true
+                args "--entrypoint="
+            }
+        }
+        steps {
+            withCredentials([usernamePassword(credentialsId: 'scribe-staging-auth-id', usernameVariable: 'SCRIBE_CLIENT_ID', passwordVariable: 'SCRIBE_CLIENT_SECRET')]) {
+            bom(target: "dir:mongo-express-scm", 
+                verbose: 2,
+                product_key: "testing",
+                scribe_enable: true,
+                scribe_client_id: "$SCRIBE_CLIENT_ID",
+                scribe_client_secret: "$SCRIBE_CLIENT_SECRET",
+                scribe_url: "https://api.staging.scribesecurity.com",
+                scribe_login_url: "https://scribesecurity-staging.us.auth0.com",
+                scribe_audience: "api.staging.scribesecurity.com",
+                )
+           }
+        }
+    }
+
+    stage('image-bom') {
+        agent {
+            docker {
+                image 'scribesecuriy.jfrog.io/scribe-docker-public-local/gensbom:latest'
+                reuseNode true
+                args "--entrypoint="
+            }
+        }
+        steps {
+            withCredentials([usernamePassword(credentialsId: 'scribe-staging-auth-id', usernameVariable: 'SCRIBE_CLIENT_ID', passwordVariable: 'SCRIBE_CLIENT_SECRET')]) {
+            bom(target: "mongo-express:1.0.0-alpha.4", 
+                verbose: 2,
+                product_key: "testing",
+                scribe_enable: true,
+                scribe_client_id: "$SCRIBE_CLIENT_ID",
+                scribe_client_secret: "$SCRIBE_CLIENT_SECRET",
+                scribe_url: "https://api.staging.scribesecurity.com",
+                scribe_login_url: "https://scribesecurity-staging.us.auth0.com",
+                scribe_audience: "api.staging.scribesecurity.com",
+                )
+           }
+        }
+    }
+    stage('download-report') {
+        agent {
+            docker {
+                image 'scribesecuriy.jfrog.io/scribe-docker-public-local/valint:latest'
+                reuseNode true
+                args "--entrypoint="
+            }
+        }
+        steps {
+           withCredentials([usernamePassword(credentialsId: 'scribe-staging-auth-id', usernameVariable: 'SCRIBE_CLIENT_ID', passwordVariable: 'SCRIBE_CLIENT_SECRET')]) {  
+            report(
+                verbose: 2,
+                scribe_enable: true,
+                scribe_client_id: "$SCRIBE_CLIENT_ID",
+                scribe_client_secret: "$SCRIBE_CLIENT_SECRET",
+                scribe_url: "https://api.staging.scribesecurity.com",
+                scribe_login_url: "https://scribesecurity-staging.us.auth0.com",
+                scribe_audience: "api.staging.scribesecurity.com",
+            )
+          }   
+      }
+    }
+  }
+}
+```
+</details>
+
+<details>
+  <summary>  Scribe integrity report - full pipeline (binary) </summary>
+
+Full workflow example of a workflow, upload evidence using Gensbom and download report using Valint.
+Finally, attach reports and evidence to your pipeline run.
+
+```javascript
+```
+</details>
+
+
 ## Gensbom integration
 <details>
   <summary>  Public registry image </summary>
 
-Create SBOM from remote `busybox:latest` image, skip if found by cache.
+Create SBOM from remote `busybox:latest` image, skip if found by the cache.
 
 ```YAML
 bom( target: "busybox:latest", 
@@ -397,7 +507,7 @@ bom(target: "docker-archive:./stub_local.tar",
 <details>
   <summary> OCI archive image </summary>
 
-Create SBOM from local oci archive.
+Create SBOM from the local OCI archive.
 
 ```YAML
 sh 'skopeo copy --override-os linux docker://stub_local oci-archive:stub_oci_local.tar`
@@ -410,8 +520,8 @@ bom(target: "oci-archive:./oci_stub_local.tar",
 <details>
   <summary> Directory target </summary>
 
-Create SBOM from local directory. \
-Note directory must be mapped to working dir for  actions to access (containerized action).
+Create SBOM from a local directory. \
+Note directory must be mapped to working dir for actions to access (containerized action).
 
 ```YAML
 sh '''
