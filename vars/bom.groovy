@@ -5,7 +5,7 @@ import java.nio.file.Paths
 def call(Map conf) {
     def command = []
 
-    command.add("gensbom")
+    command.add("valint")
     command.add(conf.target)
 
     if (conf.verbose != null) {
@@ -25,7 +25,7 @@ def call(Map conf) {
     if (conf.output_directory != null) {
         command.add(conf.output_directory)
     } else {
-        command.add("scribe/gensbom")
+        command.add("scribe/valint")
     }
 
     if (conf.output_file != null) {

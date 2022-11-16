@@ -7,8 +7,7 @@ geometry: margin=2cm
 # Scribe Jenkins shared library
 Scribe offers Jenkins a shared library for embedding evidence collecting and integrity verification to your pipeline. \
 Library wraps scribe provided CLI tools.
-* Gensbom - gitHub Action for SBOM Generation (Scribe) 
-* Valint - validate supply chain integrity tool
+* Valint - gitHub Action for SBOM Generation and validation of supply chain integrity tool
 
 
 # Installing
@@ -37,8 +36,8 @@ Add directive with the selected name.
 ```
 
 # API
-## Gensbom - bom
-Function invokes a containerized `gensbom` sub command `bom` based on the CLI.
+## Valint - bom
+Function invokes a containerized `valint` sub command `bom` based on the CLI.
 ```
 def bom(Map conf)
 ```
@@ -68,7 +67,7 @@ def bom(Map conf)
     default: cyclonedxjson
   output_directory:
     description: 'Report output directory'
-    default: ./scribe/gensbom
+    default: ./scribe/valint
   output_file:
     description: 'Output result to file'
   product_key:
@@ -88,7 +87,7 @@ def bom(Map conf)
   attest_config:
     description: 'Attestation config map'
   attest_name:
-    description: 'Attestation config name (default "gensbom")'
+    description: 'Attestation config name (default "valint")'
   attest_default:
     description: 'Attestation default config, options=[sigstore sigstore-github x509]'
     default: sigstore-github
@@ -105,8 +104,8 @@ def bom(Map conf)
     description: 'Context dir' 
 ```
 
-## Gensbom - verify
-The function invokes a containerized `gensbom` sub command `verify` based on the CLI.
+## Valint - verify
+The function invokes a containerized `valint` sub command `verify` based on the CLI.
 ```
 def verify(Map conf)
 ```
@@ -136,7 +135,7 @@ def verify(Map conf)
     default: attest-cyclonedx-json
   output_directory:
     description: 'report output directory'
-    default: ./scribe/gensbom
+    default: ./scribe/valint
   output_file:
     description: 'Output result to file'
   filter_regex:
@@ -145,7 +144,7 @@ def verify(Map conf)
   attest_config:
     description: 'Attestation config map'
   attest_name:
-    description: 'Attestation config name (default "gensbom")'
+    description: 'Attestation config name (default "valint")'
   attest_default:
     description: 'Attestation default config, options=[sigstore sigstore-github x509]'
 ```
@@ -224,13 +223,13 @@ publish()
 ## Scribe service integration
 Scribe provides a set of services to store, verify and manage the supply chain integrity. \
 Following are some integration examples.
-Scribe integrity flow - upload evidence using `gensbom` and download the integrity report using `valint`. \
+Scribe integrity flow - upload evidence and download the integrity report using `valint`. \
 You may collect evidence anywhere in your workflows. 
 
 <details>
   <summary>  Scribe integrity report - full pipeline (k8s) </summary>
 
-Full workflow example of a workflow, upload evidence using Gensbom and download report using Valint.
+Full workflow example of a workflow, upload evidence and download report using Valint.
 Finally, attach reports and evidence to your pipeline run.
 
 ```YAML
@@ -251,7 +250,7 @@ pipeline {
           sh 'git clone -b v1.0.0-alpha.4 --single-branch https://github.com/mongo-express/mongo-express.git mongo-express-scm'
         }
         
-        container('gensbom') {
+        container('valint') {
           withCredentials([usernamePassword(credentialsId: 'scribe-staging-auth-id', usernameVariable: 'SCRIBE_CLIENT_ID', passwordVariable: 'SCRIBE_CLIENT_SECRET')]) {
             bom(target: "dir:mongo-express-scm", 
                 verbose: 3,
@@ -268,7 +267,7 @@ pipeline {
 
     stage('image-bom') {
       steps {
-        container('gensbom') {
+        container('valint') {
            withCredentials([usernamePassword(credentialsId: 'scribe-staging-auth-id', usernameVariable: 'SCRIBE_CLIENT_ID', passwordVariable: 'SCRIBE_CLIENT_SECRET')]) {  
             bom(target: "mongo-express:1.0.0-alpha.4", 
                 verbose: 3,
@@ -311,13 +310,13 @@ spec:
     env:
     - name: CONTAINER_ENV_VAR
       value: jnlp
-  - name: gensbom
-    image: scribesecuriy.jfrog.io/scribe-docker-public-local/gensbom:latest 
+  - name: valint
+    image: scribesecuriy.jfrog.io/scribe-docker-public-local/valint:dev-latest 
     command:
     - cat
     tty: true
   - name: valint
-    image: scribesecuriy.jfrog.io/scribe-docker-public-local/valint:latest
+    image: scribesecuriy.jfrog.io/scribe-docker-public-local/valint:dev-latest
     command:
     - cat
     tty: true
@@ -332,7 +331,7 @@ spec:
 <details>
   <summary>  Scribe integrity report - full pipeline (docker) </summary>
 
-Full workflow example of a workflow, upload evidence using Gensbom and download report using Valint.
+Full workflow example of a workflow, upload evidence and download report using Valint.
 Finally, attach reports and evidence to your pipeline run.
 
 ```javascript
@@ -353,7 +352,7 @@ pipeline {
     stage('sbom') {
         agent {
             docker {
-                image 'scribesecuriy.jfrog.io/scribe-docker-public-local/gensbom:latest'
+                image 'scribesecuriy.jfrog.io/scribe-docker-public-local/valint:dev-latest'
                 reuseNode true
                 args "--entrypoint="
             }
@@ -377,7 +376,7 @@ pipeline {
     stage('image-bom') {
         agent {
             docker {
-                image 'scribesecuriy.jfrog.io/scribe-docker-public-local/gensbom:latest'
+                image 'scribesecuriy.jfrog.io/scribe-docker-public-local/valint:dev-latest'
                 reuseNode true
                 args "--entrypoint="
             }
@@ -400,7 +399,7 @@ pipeline {
     stage('download-report') {
         agent {
             docker {
-                image 'scribesecuriy.jfrog.io/scribe-docker-public-local/valint:latest'
+                image 'scribesecuriy.jfrog.io/scribe-docker-public-local/valint:dev-latest'
                 reuseNode true
                 args "--entrypoint="
             }
@@ -427,7 +426,7 @@ pipeline {
 <details>
   <summary>  Scribe integrity report - full pipeline (binary) </summary>
 
-Full workflow example of a workflow, upload evidence using Gensbom and download report using Valint.
+Full workflow example of a workflow, upload evidence and download report using Valint.
 Finally, attach reports and evidence to your pipeline run.
 
 ```javascript
@@ -435,7 +434,7 @@ Finally, attach reports and evidence to your pipeline run.
 </details>
 
 
-## Gensbom integration
+## Valint integration
 <details>
   <summary>  Public registry image </summary>
 
