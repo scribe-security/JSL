@@ -6,6 +6,7 @@ def call(Map conf) {
     def command = []
 
     command.add("valint")
+    command.add("bom")
     command.add(conf.target)
 
     if (conf.verbose != null) {
