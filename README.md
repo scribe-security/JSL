@@ -311,12 +311,7 @@ spec:
     - name: CONTAINER_ENV_VAR
       value: jnlp
   - name: valint
-    image: scribesecuriy.jfrog.io/scribe-docker-public-local/valint:dev-latest 
-    command:
-    - cat
-    tty: true
-  - name: valint
-    image: scribesecuriy.jfrog.io/scribe-docker-public-local/valint:dev-latest
+    image: scribesecuriy.jfrog.io/scribe-docker-public-local/valint:latest
     command:
     - cat
     tty: true
@@ -352,7 +347,7 @@ pipeline {
     stage('sbom') {
         agent {
             docker {
-                image 'scribesecuriy.jfrog.io/scribe-docker-public-local/valint:dev-latest'
+                image 'scribesecuriy.jfrog.io/scribe-docker-public-local/valint:latest'
                 reuseNode true
                 args "--entrypoint="
             }
@@ -376,7 +371,7 @@ pipeline {
     stage('image-bom') {
         agent {
             docker {
-                image 'scribesecuriy.jfrog.io/scribe-docker-public-local/valint:dev-latest'
+                image 'scribesecuriy.jfrog.io/scribe-docker-public-local/valint:latest'
                 reuseNode true
                 args "--entrypoint="
             }
@@ -399,7 +394,7 @@ pipeline {
     stage('download-report') {
         agent {
             docker {
-                image 'scribesecuriy.jfrog.io/scribe-docker-public-local/valint:dev-latest'
+                image 'scribesecuriy.jfrog.io/scribe-docker-public-local/valint:latest'
                 reuseNode true
                 args "--entrypoint="
             }
