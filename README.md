@@ -52,13 +52,13 @@ def bom(Map conf)
 ### Map arguments
 ```YAML
   type:
-    description: 'Target source type options=[docker,docker-archive, oci-archive, dir, registry]'
+    description: 'Target source type options=[docker,docker-archive, oci-archive, dir, registry, git]'
     default: registry
   target:
-    description: 'Target object name format=[<image:tag>, <dir_path>]'
+    description: 'Target object name format=[<image:tag>, <dir path>, <git url>]'
     required: true
   verbose:
-    description: 'Increase verbosity (-v = info, -vv = debug)'
+    description: 'Log verbosity level [-v,--verbose=1] = info, [-vv,--verbose=2] = debug'
     default: 0
   config:
     description: 'Application config file'
@@ -120,13 +120,13 @@ def verify(Map conf)
 ### Map arguments
 ```YAML
   type:
-    description: 'Target source type options=[docker,docker-archive, oci-archive, dir, registry]'
+    description: 'Target source type options=[docker,docker-archive, oci-archive, dir, registry, git]'
     default: registry
   target:
-    description: 'Target object name format=[<image:tag>, <dir_path>]'
+    description: 'Target object name format=[<image:tag>, <dir path>, <git url>]'
     required: true
   verbose:
-    description: 'Increase verbosity (-v = info, -vv = debug)'
+    description: 'Log verbosity level [-v,--verbose=1] = info, [-vv,--verbose=2] = debug'
     default: 0
   config:
     description: 'Application config file'
@@ -168,7 +168,7 @@ def report(Map conf)
 ### Map arguments
 ```YAML
   verbose:
-    description: 'Increase verbosity (-v = info, -vv = debug)'
+    description: 'Log verbosity level [-v,--verbose=1] = info, [-vv,--verbose=2] = debug'
     default: 0
   config:
     description: 'Application config file'
@@ -433,7 +433,7 @@ Finally, attach reports and evidence to your pipeline run.
 <details>
   <summary>  Public registry image </summary>
 
-Create SBOM from remote `busybox:latest` image, skip if found by the cache.
+Create SBOM for remote `busybox:latest` image, skip if found by the cache.
 
 ```YAML
 bom( target: "busybox:latest", 
@@ -488,7 +488,7 @@ publish()
 <details>
   <summary> Docker archive image </summary>
 
-Create SBOM from local `docker save ...` output.
+Create SBOM for local `docker save ...` output.
 ```YAML
 sh 'docker build . -t stub_local'
 sh 'docker save  -o stub_local.tar stub_local'
@@ -501,7 +501,7 @@ bom(target: "docker-archive:./stub_local.tar",
 <details>
   <summary> OCI archive image </summary>
 
-Create SBOM from the local OCI archive.
+Create SBOM for the local OCI archive.
 
 ```YAML
 sh 'skopeo copy --override-os linux docker://stub_local oci-archive:stub_oci_local.tar`
@@ -514,7 +514,7 @@ bom(target: "oci-archive:./oci_stub_local.tar",
 <details>
   <summary> Directory target </summary>
 
-Create SBOM from a local directory. \
+Create SBOM for a local directory. \
 Note directory must be mapped to working dir for actions to access (containerized action).
 
 ```YAML
