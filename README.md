@@ -63,10 +63,10 @@ def bom(Map conf)
   config:
     description: 'Application config file'
   format:
-    description: 'Sbom formatter, options=[cyclonedx-json cyclonedx-xml attest-cyclonedx-json statement-cyclonedx-json]'
+    description: 'Evidence format, options=[cyclonedx-json cyclonedx-xml attest-cyclonedx-json statement-cyclonedx-json]'
     default: cyclonedxjson
   output_directory:
-    description: 'Report output directory'
+    description: 'Output directory path'
     default: ./scribe/valint
   output_file:
     description: 'Output result to file'
@@ -79,7 +79,7 @@ def bom(Map conf)
   filter_regex:
     description: 'Filter out files by regex'
     default: .*\.pyc,\.git/.*
-  collect_regex:
+  attach_regex:
     description: 'Collect files content by regex'
   force:
     description: 'Force overwrite cache'
@@ -134,7 +134,7 @@ def verify(Map conf)
     description: 'Sbom input formatter, options=[attest-cyclonedx-json] (default "attest-cyclonedx-json")'
     default: attest-cyclonedx-json
   output_directory:
-    description: 'report output directory'
+    description: 'Output directory path'
     default: ./scribe/valint
   output_file:
     description: 'Output result to file'
@@ -473,9 +473,12 @@ bom(target: "busybox:latest",
 
 
 <details>
-  <summary> Save SBOM as artifact </summary>
+  <summary>  Save as artifact (SBOM, SLSA) </summary>
 
-Using action `output_path` you can access the generated SBOM and store it as an artifact.
+Using input variable `output_directory` or `output_file` to export evidence as an artifact.
+
+> Use input variable `format` to select between supported formats.
+
 ```YAML
 bom(target: "busybox:latest", 
     verbose: 2,
