@@ -44,8 +44,7 @@ def bom(Map conf)
 
 ### Usage
 ```
- bom( target: "busybox:latest", 
-      verbose: 2,
+ bom( target: "busybox:latest"
       )
 ```
 
@@ -112,8 +111,7 @@ def verify(Map conf)
 
 ### Usage
 ```
- verify(target: "busybox:latest", 
-      verbose: 2,
+ verify(target: "busybox:latest"
       )
 ```
 
@@ -157,10 +155,8 @@ def report(Map conf)
 
 ### Usage
 ```YAML
- report(target: "busybox:latest", 
-      verbose: 2,
-       scribe_enable: true,
-      scribe_client_id: ${{ inputs.client-id }}
+ report(target: "busybox:latest",
+      scribe_enable: true,
       scribe_client_secret: ${{ inputs.client-secret }}
       )
 ```
@@ -251,11 +247,9 @@ pipeline {
         }
         
         container('valint') {
-          withCredentials([usernamePassword(credentialsId: 'scribe-staging-auth-id', usernameVariable: 'SCRIBE_CLIENT_ID', passwordVariable: 'SCRIBE_CLIENT_SECRET')]) {
-            bom(target: "dir:mongo-express-scm", 
-                verbose: 3,
+          withCredentials([usernamePassword(credentialsId: 'scribe-staging-auth-id', passwordVariable: 'SCRIBE_CLIENT_SECRET')]) {
+            bom(target: "dir:mongo-express-scm",
                 scribe_enable: true,
-                scribe_client_id: "$SCRIBE_CLIENT_ID",
                 scribe_client_secret: "$SCRIBE_CLIENT_SECRET",
                 )
           }
@@ -268,11 +262,9 @@ pipeline {
     stage('image-bom') {
       steps {
         container('valint') {
-           withCredentials([usernamePassword(credentialsId: 'scribe-staging-auth-id', usernameVariable: 'SCRIBE_CLIENT_ID', passwordVariable: 'SCRIBE_CLIENT_SECRET')]) {  
-            bom(target: "mongo-express:1.0.0-alpha.4", 
-                verbose: 3,
+           withCredentials([usernamePassword(credentialsId: 'scribe-staging-auth-id', passwordVariable: 'SCRIBE_CLIENT_SECRET')]) {  
+            bom(target: "mongo-express:1.0.0-alpha.4",
                 scribe_enable: true,
-                scribe_client_id: "$SCRIBE_CLIENT_ID",
                 scribe_client_secret: "$SCRIBE_CLIENT_SECRET",
                 )
           }
@@ -283,11 +275,9 @@ pipeline {
     stage('download-report') {
       steps {
         container('valint') {
-           withCredentials([usernamePassword(credentialsId: 'scribe-staging-auth-id', usernameVariable: 'SCRIBE_CLIENT_ID', passwordVariable: 'SCRIBE_CLIENT_SECRET')]) {  
+           withCredentials([usernamePassword(credentialsId: 'scribe-staging-auth-id', passwordVariable: 'SCRIBE_CLIENT_SECRET')]) {  
             report(
-                verbose: 3,
                 scribe_enable: true,
-                scribe_client_id: "$SCRIBE_CLIENT_ID",
                 scribe_client_secret: "$SCRIBE_CLIENT_SECRET",
             )
           }
@@ -353,12 +343,10 @@ pipeline {
             }
         }
         steps {
-            withCredentials([usernamePassword(credentialsId: 'scribe-staging-auth-id', usernameVariable: 'SCRIBE_CLIENT_ID', passwordVariable: 'SCRIBE_CLIENT_SECRET')]) {
-            bom(target: "dir:mongo-express-scm", 
-                verbose: 2,
+            withCredentials([usernamePassword(credentialsId: 'scribe-staging-auth-id', passwordVariable: 'SCRIBE_CLIENT_SECRET')]) {
+            bom(target: "dir:mongo-express-scm",
                 product_key: "testing",
                 scribe_enable: true,
-                scribe_client_id: "$SCRIBE_CLIENT_ID",
                 scribe_client_secret: "$SCRIBE_CLIENT_SECRET",
                 scribe_url: "https://api.staging.scribesecurity.com",
                 scribe_login_url: "https://scribesecurity-staging.us.auth0.com",
@@ -377,12 +365,10 @@ pipeline {
             }
         }
         steps {
-            withCredentials([usernamePassword(credentialsId: 'scribe-staging-auth-id', usernameVariable: 'SCRIBE_CLIENT_ID', passwordVariable: 'SCRIBE_CLIENT_SECRET')]) {
-            bom(target: "mongo-express:1.0.0-alpha.4", 
-                verbose: 2,
+            withCredentials([usernamePassword(credentialsId: 'scribe-staging-auth-id', passwordVariable: 'SCRIBE_CLIENT_SECRET')]) {
+            bom(target: "mongo-express:1.0.0-alpha.4",
                 product_key: "testing",
                 scribe_enable: true,
-                scribe_client_id: "$SCRIBE_CLIENT_ID",
                 scribe_client_secret: "$SCRIBE_CLIENT_SECRET",
                 scribe_url: "https://api.staging.scribesecurity.com",
                 scribe_login_url: "https://scribesecurity-staging.us.auth0.com",
@@ -400,11 +386,9 @@ pipeline {
             }
         }
         steps {
-           withCredentials([usernamePassword(credentialsId: 'scribe-staging-auth-id', usernameVariable: 'SCRIBE_CLIENT_ID', passwordVariable: 'SCRIBE_CLIENT_SECRET')]) {  
+           withCredentials([usernamePassword(credentialsId: 'scribe-staging-auth-id', passwordVariable: 'SCRIBE_CLIENT_SECRET')]) {  
             report(
-                verbose: 2,
                 scribe_enable: true,
-                scribe_client_id: "$SCRIBE_CLIENT_ID",
                 scribe_client_secret: "$SCRIBE_CLIENT_SECRET",
                 scribe_url: "https://api.staging.scribesecurity.com",
                 scribe_login_url: "https://scribesecurity-staging.us.auth0.com",
@@ -437,7 +421,7 @@ Create SBOM for remote `busybox:latest` image, skip if found by the cache.
 
 ```YAML
 bom( target: "busybox:latest", 
-    verbose: 2,
+    force: true
     )
 ``` 
 </details>
@@ -447,8 +431,7 @@ bom( target: "busybox:latest",
 
 Custom private registry, skip cache (using `Force`), output verbose (debug level) log output.
 ```YAML
-bom(target: "scribesecuriy.jfrog.io/scribe-docker-local/stub_remote:latest", 
-    verbose: 2,
+bom(target: "scribesecuriy.jfrog.io/scribe-docker-local/stub_remote:latest",
     force: true
     )
 ```
@@ -461,8 +444,7 @@ Custom metadata added to sbom
 Data will be included in signed payload when output is an attestation.
 ```YAML
 sh 'export test_env=test_env_value`
-bom(target: "busybox:latest", 
-    verbose: 3,
+bom(target: "busybox:latest",
     force: true,
     name: name_value
     env: test_env
@@ -480,8 +462,7 @@ Using input variable `output_directory` or `output_file` to export evidence as a
 > Use input variable `format` to select between supported formats.
 
 ```YAML
-bom(target: "busybox:latest", 
-    verbose: 2,
+bom(target: "busybox:latest",
     force: true
 )
 publish()
@@ -495,8 +476,7 @@ Create SBOM for local `docker save ...` output.
 ```YAML
 sh 'docker build . -t stub_local'
 sh 'docker save  -o stub_local.tar stub_local'
-bom(target: "docker-archive:./stub_local.tar", 
-    verbose: 2
+bom(target: "docker-archive:./stub_local.tar"
 )
 ``` 
 </details>
@@ -508,8 +488,7 @@ Create SBOM for the local OCI archive.
 
 ```YAML
 sh 'skopeo copy --override-os linux docker://stub_local oci-archive:stub_oci_local.tar`
-bom(target: "oci-archive:./oci_stub_local.tar", 
-    verbose: 2
+bom(target: "oci-archive:./oci_stub_local.tar"
 )
 ``` 
 </details>
@@ -524,8 +503,7 @@ Note directory must be mapped to working dir for actions to access (containerize
 sh '''
 mkdir testdir \
 echo "test" > testdir/test.txt'''
-bom(target: "dir:./testdir", 
-    verbose: 2
+bom(target: "dir:./testdir"
 )
 ```
 
